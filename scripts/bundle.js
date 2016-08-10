@@ -86,10 +86,6 @@
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _apiMapping = __webpack_require__(485);
-
-	var _apiMapping2 = _interopRequireDefault(_apiMapping);
-
 	var _urlMapping = __webpack_require__(486);
 
 	var _urlMapping2 = _interopRequireDefault(_urlMapping);
@@ -111,19 +107,6 @@
 	var ContentBox = _react2.default.createClass({
 	    displayName: 'ContentBox',
 
-	    loadUrlMapping: function loadUrlMapping() {
-	        _jquery2.default.ajax({
-	            url: '/urlMapping.json',
-	            dataType: 'json',
-	            cache: false,
-	            success: function (data) {
-	                this.setState({ urlMapping: data });
-	            }.bind(this),
-	            error: function (xhr, status, err) {
-	                alert("Can't load url mapping!");
-	            }.bind(this)
-	        });
-	    },
 	    getInitialState: function getInitialState() {
 	        return {
 	            cids: [],
@@ -134,7 +117,8 @@
 	        };
 	    },
 	    componentDidMount: function componentDidMount() {
-	        this.loadUrlMapping();
+	        //this.loadUrlMapping();
+	        this.setState({ urlMapping: _urlMapping2.default });
 	    },
 	    updateRootState: function updateRootState(key, value) {
 	        var obj = {};
@@ -44181,9 +44165,14 @@
 
 	var _Paper2 = _interopRequireDefault(_Paper);
 
+	var _apiMapping = __webpack_require__(485);
+
+	var _apiMapping2 = _interopRequireDefault(_apiMapping);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var _ = __webpack_require__(455);
+
 
 	var EventPanel = _react2.default.createClass({
 	    displayName: 'EventPanel',
@@ -44211,21 +44200,8 @@
 	            }.bind(this)
 	        });
 	    },
-	    loadApiMapping: function loadApiMapping() {
-	        _jquery2.default.ajax({
-	            url: '/apiMapping.json',
-	            dataType: 'json',
-	            cache: false,
-	            success: function (data) {
-	                this.setState({ mapping: data });
-	            }.bind(this),
-	            error: function (xhr, status, err) {
-	                console.log(this.props.url, status, err.toString());
-	            }.bind(this)
-	        });
-	    },
 	    componentDidMount: function componentDidMount() {
-	        this.loadApiMapping();
+	        this.setState({ mapping: _apiMapping2.default });
 	        this.loadApiStatus();
 	        setInterval(this.loadApiStatus, this.props.pullInterval);
 	    },
