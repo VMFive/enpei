@@ -40,7 +40,7 @@ var LogPanel = React.createClass({
     render: function() {
         return (
             <div>
-                <Websocket url="ws://qa-log-proxy.vm5apis.com" onMessage={this.handleData}/>
+                <Websocket url="wss://qa-log-proxy.vm5apis.com" onMessage={this.handleData}/>
             </div>
         );
     }
