@@ -67463,7 +67463,7 @@
 	        return _react2.default.createElement(
 	            'div',
 	            null,
-	            _react2.default.createElement(_Websocket2.default, { url: 'wss://qa-log-proxy.vm5apis.com', onMessage: this.handleData })
+	            _react2.default.createElement(_Websocket2.default, { url: 'ws://qa-log-proxy.vm5apis.com', onMessage: this.handleData })
 	        );
 	    }
 	});
