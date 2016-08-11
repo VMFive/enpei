@@ -64,19 +64,19 @@
 
 	var _EventPanel2 = _interopRequireDefault(_EventPanel);
 
-	var _LogPanel = __webpack_require__(456);
+	var _LogPanel = __webpack_require__(457);
 
 	var _LogPanel2 = _interopRequireDefault(_LogPanel);
 
-	var _SettingForm = __webpack_require__(458);
+	var _SettingForm = __webpack_require__(459);
 
 	var _SettingForm2 = _interopRequireDefault(_SettingForm);
 
-	var _UrlDialog = __webpack_require__(487);
+	var _UrlDialog = __webpack_require__(475);
 
 	var _UrlDialog2 = _interopRequireDefault(_UrlDialog);
 
-	var _reactTapEventPlugin = __webpack_require__(474);
+	var _reactTapEventPlugin = __webpack_require__(476);
 
 	var _reactTapEventPlugin2 = _interopRequireDefault(_reactTapEventPlugin);
 
@@ -84,13 +84,13 @@
 
 	var _MuiThemeProvider2 = _interopRequireDefault(_MuiThemeProvider);
 
-	var _Tabs = __webpack_require__(480);
+	var _Tabs = __webpack_require__(482);
 
 	var _jquery = __webpack_require__(452);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _urlMapping = __webpack_require__(486);
+	var _urlMapping = __webpack_require__(487);
 
 	var _urlMapping2 = _interopRequireDefault(_urlMapping);
 
@@ -44204,7 +44204,7 @@
 
 	var _Paper2 = _interopRequireDefault(_Paper);
 
-	var _apiMapping = __webpack_require__(485);
+	var _apiMapping = __webpack_require__(456);
 
 	var _apiMapping2 = _interopRequireDefault(_apiMapping);
 
@@ -67417,6 +67417,69 @@
 
 /***/ },
 /* 456 */
+/***/ function(module, exports) {
+
+	module.exports = {
+		"campaignsLangCids": {
+			"display": "Language",
+			"textinput": true
+		},
+		"timelimitCids": {
+			"display": "Time Limit",
+			"textinput": true
+		},
+		"campaignsStatusCodeCids": {
+			"display": "HTTP Response Code (Campaign)",
+			"textinput": true
+		},
+		"statusCodeCids": {
+			"display": "HTTP Response Code (Trial)",
+			"textinput": true
+		},
+		"onetimeTokenStatusCodeCids": {
+			"display": "HTTP Response Code (Onetime Token)",
+			"textinput": true
+		},
+		"expiredCids": {
+			"display": "Campaign Expired (Trial)",
+			"textinput": false
+		},
+		"campaignsExpiredCids": {
+			"display": "Campaign Expired (Campaign)",
+			"textinput": false
+		},
+		"campaignsNovmCids": {
+			"display": "No VM (Campaign)",
+			"textinput": false
+		},
+		"novmCids": {
+			"display": "No VM (Trial)",
+			"textinput": false
+		},
+		"wsNovmCids": {
+			"display": "No VM (Web Socket)",
+			"textinput": false
+		},
+		"notYoursCids": {
+			"display": "VM Not Yours",
+			"textinput": false
+		},
+		"campaignsCorruptedImageCids": {
+			"display": "Image Corrupts (Campaign)",
+			"textinput": false
+		},
+		"downloadFailCids": {
+			"display": "Image Corrupts (Trial)",
+			"textinput": false
+		},
+		"corruptedVideoCids": {
+			"display": "Video Corrupts",
+			"textinput": false
+		}
+	};
+
+/***/ },
+/* 457 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -67431,7 +67494,7 @@
 
 	var _reactDom = __webpack_require__(35);
 
-	var _Websocket = __webpack_require__(457);
+	var _Websocket = __webpack_require__(458);
 
 	var _Websocket2 = _interopRequireDefault(_Websocket);
 
@@ -67486,7 +67549,7 @@
 	exports.default = LogPanel;
 
 /***/ },
-/* 457 */
+/* 458 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -67603,7 +67666,7 @@
 	exports.default = Websocket;
 
 /***/ },
-/* 458 */
+/* 459 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -67622,7 +67685,7 @@
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _send = __webpack_require__(459);
+	var _send = __webpack_require__(460);
 
 	var _send2 = _interopRequireDefault(_send);
 
@@ -67630,15 +67693,15 @@
 
 	var _FlatButton2 = _interopRequireDefault(_FlatButton);
 
-	var _SettingPageOne = __webpack_require__(460);
+	var _SettingPageOne = __webpack_require__(461);
 
 	var _SettingPageOne2 = _interopRequireDefault(_SettingPageOne);
 
-	var _SettingPageTwo = __webpack_require__(469);
+	var _SettingPageTwo = __webpack_require__(470);
 
 	var _SettingPageTwo2 = _interopRequireDefault(_SettingPageTwo);
 
-	var _SettingPageThree = __webpack_require__(473);
+	var _SettingPageThree = __webpack_require__(474);
 
 	var _SettingPageThree2 = _interopRequireDefault(_SettingPageThree);
 
@@ -67907,7 +67970,7 @@
 	exports.default = SettingForm;
 
 /***/ },
-/* 459 */
+/* 460 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -67944,7 +68007,7 @@
 	exports.default = ContentSend;
 
 /***/ },
-/* 460 */
+/* 461 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -67967,15 +68030,15 @@
 
 	var _Paper2 = _interopRequireDefault(_Paper);
 
-	var _FormDropdown = __webpack_require__(461);
+	var _FormDropdown = __webpack_require__(462);
 
 	var _FormDropdown2 = _interopRequireDefault(_FormDropdown);
 
-	var _FormRadioButtons = __webpack_require__(462);
+	var _FormRadioButtons = __webpack_require__(463);
 
 	var _FormRadioButtons2 = _interopRequireDefault(_FormRadioButtons);
 
-	var _FormTextboxInput = __webpack_require__(468);
+	var _FormTextboxInput = __webpack_require__(469);
 
 	var _FormTextboxInput2 = _interopRequireDefault(_FormTextboxInput);
 
@@ -68051,7 +68114,7 @@
 	exports.default = SettingPageOne;
 
 /***/ },
-/* 461 */
+/* 462 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68121,7 +68184,7 @@
 	exports.default = FormDropdown;
 
 /***/ },
-/* 462 */
+/* 463 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68136,7 +68199,7 @@
 
 	var _reactDom = __webpack_require__(35);
 
-	var _RadioButton = __webpack_require__(463);
+	var _RadioButton = __webpack_require__(464);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -68191,7 +68254,7 @@
 	exports.default = FormRadioButtons;
 
 /***/ },
-/* 463 */
+/* 464 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68201,11 +68264,11 @@
 	});
 	exports.default = exports.RadioButtonGroup = exports.RadioButton = undefined;
 
-	var _RadioButton2 = __webpack_require__(464);
+	var _RadioButton2 = __webpack_require__(465);
 
 	var _RadioButton3 = _interopRequireDefault(_RadioButton2);
 
-	var _RadioButtonGroup2 = __webpack_require__(467);
+	var _RadioButtonGroup2 = __webpack_require__(468);
 
 	var _RadioButtonGroup3 = _interopRequireDefault(_RadioButtonGroup2);
 
@@ -68216,7 +68279,7 @@
 	exports.default = _RadioButton3.default;
 
 /***/ },
-/* 464 */
+/* 465 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68245,11 +68308,11 @@
 
 	var _EnhancedSwitch2 = _interopRequireDefault(_EnhancedSwitch);
 
-	var _radioButtonUnchecked = __webpack_require__(465);
+	var _radioButtonUnchecked = __webpack_require__(466);
 
 	var _radioButtonUnchecked2 = _interopRequireDefault(_radioButtonUnchecked);
 
-	var _radioButtonChecked = __webpack_require__(466);
+	var _radioButtonChecked = __webpack_require__(467);
 
 	var _radioButtonChecked2 = _interopRequireDefault(_radioButtonChecked);
 
@@ -68478,7 +68541,7 @@
 	exports.default = RadioButton;
 
 /***/ },
-/* 465 */
+/* 466 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68515,7 +68578,7 @@
 	exports.default = ToggleRadioButtonUnchecked;
 
 /***/ },
-/* 466 */
+/* 467 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68552,7 +68615,7 @@
 	exports.default = ToggleRadioButtonChecked;
 
 /***/ },
-/* 467 */
+/* 468 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -68573,7 +68636,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _RadioButton = __webpack_require__(463);
+	var _RadioButton = __webpack_require__(464);
 
 	var _RadioButton2 = _interopRequireDefault(_RadioButton);
 
@@ -68768,7 +68831,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 468 */
+/* 469 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68805,7 +68868,7 @@
 	exports.default = FormTextboxInput;
 
 /***/ },
-/* 469 */
+/* 470 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68824,11 +68887,11 @@
 
 	var _Divider2 = _interopRequireDefault(_Divider);
 
-	var _FormRadioButtons = __webpack_require__(462);
+	var _FormRadioButtons = __webpack_require__(463);
 
 	var _FormRadioButtons2 = _interopRequireDefault(_FormRadioButtons);
 
-	var _FormToggle = __webpack_require__(470);
+	var _FormToggle = __webpack_require__(471);
 
 	var _FormToggle2 = _interopRequireDefault(_FormToggle);
 
@@ -68945,7 +69008,7 @@
 	exports.default = SettingPageTwo;
 
 /***/ },
-/* 470 */
+/* 471 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68960,7 +69023,7 @@
 
 	var _reactDom = __webpack_require__(35);
 
-	var _Toggle = __webpack_require__(471);
+	var _Toggle = __webpack_require__(472);
 
 	var _Toggle2 = _interopRequireDefault(_Toggle);
 
@@ -68990,7 +69053,7 @@
 	exports.default = FormToggle;
 
 /***/ },
-/* 471 */
+/* 472 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -69000,7 +69063,7 @@
 	});
 	exports.default = undefined;
 
-	var _Toggle = __webpack_require__(472);
+	var _Toggle = __webpack_require__(473);
 
 	var _Toggle2 = _interopRequireDefault(_Toggle);
 
@@ -69009,7 +69072,7 @@
 	exports.default = _Toggle2.default;
 
 /***/ },
-/* 472 */
+/* 473 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -69303,7 +69366,7 @@
 	exports.default = Toggle;
 
 /***/ },
-/* 473 */
+/* 474 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -69322,7 +69385,7 @@
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _send = __webpack_require__(459);
+	var _send = __webpack_require__(460);
 
 	var _send2 = _interopRequireDefault(_send);
 
@@ -69338,7 +69401,7 @@
 
 	var _Paper2 = _interopRequireDefault(_Paper);
 
-	var _RadioButton = __webpack_require__(463);
+	var _RadioButton = __webpack_require__(464);
 
 	var _RaisedButton = __webpack_require__(423);
 
@@ -69758,11 +69821,113 @@
 	exports.default = SettingPageThree;
 
 /***/ },
-/* 474 */
+/* 475 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(475);
-	var defaultClickRejectionStrategy = __webpack_require__(476);
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(35);
+
+	var _Dialog = __webpack_require__(426);
+
+	var _Dialog2 = _interopRequireDefault(_Dialog);
+
+	var _FlatButton = __webpack_require__(428);
+
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
+
+	var _TextField = __webpack_require__(431);
+
+	var _TextField2 = _interopRequireDefault(_TextField);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var UrlDialog = _react2.default.createClass({
+		displayName: 'UrlDialog',
+
+		getInitialState: function getInitialState() {
+			return {
+				primaryText: '',
+				value: '',
+				primaryEmpty: false,
+				valueEmpty: false
+			};
+		},
+		handleChangePrimaryText: function handleChangePrimaryText(e) {
+			this.setState({ primaryText: e.target.value });
+			this.setState({ primaryEmpty: false });
+		},
+		handleChangeValue: function handleChangeValue(e) {
+			this.setState({ value: e.target.value });
+			this.setState({ valueEmpty: false });
+		},
+		handleSubmit: function handleSubmit() {
+			if (this.state.primaryText == '') {
+				this.setState({ primaryEmpty: true });
+			}
+			if (this.state.value == '') {
+				this.setState({ valueEmpty: true });
+			}
+			if (this.state.primaryText != '' && this.state.value != '') {
+				var len = this.props.serverOptions.length;
+				var obj = {
+					id: len,
+					value: "Set url",
+					primaryText: "Set url..."
+				};
+				var serverOptions = this.props.serverOptions;
+				var temp = _.find(serverOptions, { 'value': this.state.value });
+				if (temp) {
+					alert("This url already exist! The option for this url is \"" + temp.primaryText + "\".");
+					this.setState({ primaryText: '' });
+					this.setState({ value: '' });
+					this.setState({ primaryEmpty: false });
+					this.setState({ valueEmpty: false });
+				} else {
+					serverOptions[len - 1].value = this.state.value;
+					serverOptions[len - 1].primaryText = this.state.primaryText;
+					serverOptions.push(obj);
+					this.props.updateRootState("serverOptions", serverOptions);
+					this.props.updateRootState("urlPrefix", this.state.value);
+					this.handleClose();
+				}
+			}
+		},
+		handleClose: function handleClose() {
+			this.setState({ primaryText: '' });
+			this.setState({ value: '' });
+			this.setState({ primaryEmpty: false });
+			this.setState({ valueEmpty: false });
+			this.props.updateRootState("openUrlInput", false);
+		},
+		render: function render() {
+			var actions = [_react2.default.createElement(_FlatButton2.default, { label: 'Submit', primary: true, onTouchTap: this.handleSubmit }), _react2.default.createElement(_FlatButton2.default, { label: 'Cancel', primary: true, onTouchTap: this.handleClose })];
+			return _react2.default.createElement(
+				_Dialog2.default,
+				{ actions: actions, modal: false, open: this.props.openUrlInput, onRequestClose: this.handleClose },
+				_react2.default.createElement(_TextField2.default, { hintText: 'Enter a name to identify the server', errorText: this.state.primaryEmpty ? "This field is required." : null, floatingLabelText: 'Server Name', value: this.state.primaryText, onChange: this.handleChangePrimaryText }),
+				_react2.default.createElement('br', null),
+				_react2.default.createElement(_TextField2.default, { hintText: 'Enter a url', errorText: this.state.valueEmpty ? "This field is required." : null, floatingLabelText: 'Url', value: this.state.value, onChange: this.handleChangeValue })
+			);
+		}
+	});
+
+	exports.default = UrlDialog;
+
+/***/ },
+/* 476 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(477);
+	var defaultClickRejectionStrategy = __webpack_require__(478);
 
 	var alreadyInjected = false;
 
@@ -69784,14 +69949,14 @@
 	  alreadyInjected = true;
 
 	  __webpack_require__(44).injection.injectEventPluginsByName({
-	    'TapEventPlugin':       __webpack_require__(477)(shouldRejectClick)
+	    'TapEventPlugin':       __webpack_require__(479)(shouldRejectClick)
 	  });
 	};
 
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 475 */
+/* 477 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -69846,7 +70011,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 476 */
+/* 478 */
 /***/ function(module, exports) {
 
 	module.exports = function(lastTouchEvent, clickTimestamp) {
@@ -69857,7 +70022,7 @@
 
 
 /***/ },
-/* 477 */
+/* 479 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -69885,10 +70050,10 @@
 	var EventPluginUtils = __webpack_require__(46);
 	var EventPropagators = __webpack_require__(43);
 	var SyntheticUIEvent = __webpack_require__(77);
-	var TouchEventUtils = __webpack_require__(478);
+	var TouchEventUtils = __webpack_require__(480);
 	var ViewportMetrics = __webpack_require__(78);
 
-	var keyOf = __webpack_require__(479);
+	var keyOf = __webpack_require__(481);
 	var topLevelTypes = EventConstants.topLevelTypes;
 
 	var isStartish = EventPluginUtils.isStartish;
@@ -70033,7 +70198,7 @@
 
 
 /***/ },
-/* 478 */
+/* 480 */
 /***/ function(module, exports) {
 
 	/**
@@ -70081,7 +70246,7 @@
 
 
 /***/ },
-/* 479 */
+/* 481 */
 /***/ function(module, exports) {
 
 	/**
@@ -70121,7 +70286,7 @@
 	module.exports = keyOf;
 
 /***/ },
-/* 480 */
+/* 482 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -70131,11 +70296,11 @@
 	});
 	exports.default = exports.Tabs = exports.Tab = undefined;
 
-	var _Tab2 = __webpack_require__(481);
+	var _Tab2 = __webpack_require__(483);
 
 	var _Tab3 = _interopRequireDefault(_Tab2);
 
-	var _Tabs2 = __webpack_require__(482);
+	var _Tabs2 = __webpack_require__(484);
 
 	var _Tabs3 = _interopRequireDefault(_Tabs2);
 
@@ -70146,7 +70311,7 @@
 	exports.default = _Tabs3.default;
 
 /***/ },
-/* 481 */
+/* 483 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -70342,7 +70507,7 @@
 	exports.default = Tab;
 
 /***/ },
-/* 482 */
+/* 484 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -70367,11 +70532,11 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _TabTemplate = __webpack_require__(483);
+	var _TabTemplate = __webpack_require__(485);
 
 	var _TabTemplate2 = _interopRequireDefault(_TabTemplate);
 
-	var _InkBar = __webpack_require__(484);
+	var _InkBar = __webpack_require__(486);
 
 	var _InkBar2 = _interopRequireDefault(_InkBar);
 
@@ -70649,7 +70814,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 483 */
+/* 485 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -70713,7 +70878,7 @@
 	exports.default = TabTemplate;
 
 /***/ },
-/* 484 */
+/* 486 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -70802,70 +70967,7 @@
 	exports.default = InkBar;
 
 /***/ },
-/* 485 */
-/***/ function(module, exports) {
-
-	module.exports = {
-		"campaignsLangCids": {
-			"display": "Language",
-			"textinput": true
-		},
-		"timelimitCids": {
-			"display": "Time Limit",
-			"textinput": true
-		},
-		"campaignsStatusCodeCids": {
-			"display": "HTTP Response Code (Campaign)",
-			"textinput": true
-		},
-		"statusCodeCids": {
-			"display": "HTTP Response Code (Trial)",
-			"textinput": true
-		},
-		"onetimeTokenStatusCodeCids": {
-			"display": "HTTP Response Code (Onetime Token)",
-			"textinput": true
-		},
-		"expiredCids": {
-			"display": "Campaign Expired (Trial)",
-			"textinput": false
-		},
-		"campaignsExpiredCids": {
-			"display": "Campaign Expired (Campaign)",
-			"textinput": false
-		},
-		"campaignsNovmCids": {
-			"display": "No VM (Campaign)",
-			"textinput": false
-		},
-		"novmCids": {
-			"display": "No VM (Trial)",
-			"textinput": false
-		},
-		"wsNovmCids": {
-			"display": "No VM (Web Socket)",
-			"textinput": false
-		},
-		"notYoursCids": {
-			"display": "VM Not Yours",
-			"textinput": false
-		},
-		"campaignsCorruptedImageCids": {
-			"display": "Image Corrupts (Campaign)",
-			"textinput": false
-		},
-		"downloadFailCids": {
-			"display": "Image Corrupts (Trial)",
-			"textinput": false
-		},
-		"corruptedVideoCids": {
-			"display": "Video Corrupts",
-			"textinput": false
-		}
-	};
-
-/***/ },
-/* 486 */
+/* 487 */
 /***/ function(module, exports) {
 
 	module.exports = {
@@ -70916,108 +71018,6 @@
 			"url": "/v3/trial/set-next-video-frames-corrupted/:cid"
 		}
 	};
-
-/***/ },
-/* 487 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	Object.defineProperty(exports, "__esModule", {
-		value: true
-	});
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	var _reactDom = __webpack_require__(35);
-
-	var _Dialog = __webpack_require__(426);
-
-	var _Dialog2 = _interopRequireDefault(_Dialog);
-
-	var _FlatButton = __webpack_require__(428);
-
-	var _FlatButton2 = _interopRequireDefault(_FlatButton);
-
-	var _TextField = __webpack_require__(431);
-
-	var _TextField2 = _interopRequireDefault(_TextField);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var UrlDialog = _react2.default.createClass({
-		displayName: 'UrlDialog',
-
-		getInitialState: function getInitialState() {
-			return {
-				primaryText: '',
-				value: '',
-				primaryEmpty: false,
-				valueEmpty: false
-			};
-		},
-		handleChangePrimaryText: function handleChangePrimaryText(e) {
-			this.setState({ primaryText: e.target.value });
-			this.setState({ primaryEmpty: false });
-		},
-		handleChangeValue: function handleChangeValue(e) {
-			this.setState({ value: e.target.value });
-			this.setState({ valueEmpty: false });
-		},
-		handleSubmit: function handleSubmit() {
-			if (this.state.primaryText == '') {
-				this.setState({ primaryEmpty: true });
-			}
-			if (this.state.value == '') {
-				this.setState({ valueEmpty: true });
-			}
-			if (this.state.primaryText != '' && this.state.value != '') {
-				var len = this.props.serverOptions.length;
-				var obj = {
-					id: len,
-					value: "Set url",
-					primaryText: "Set url..."
-				};
-				var serverOptions = this.props.serverOptions;
-				var temp = _.find(serverOptions, { 'value': this.state.value });
-				if (temp) {
-					alert("This url already exist! The option for this url is \"" + temp.primaryText + "\".");
-					this.setState({ primaryText: '' });
-					this.setState({ value: '' });
-					this.setState({ primaryEmpty: false });
-					this.setState({ valueEmpty: false });
-				} else {
-					serverOptions[len - 1].value = this.state.value;
-					serverOptions[len - 1].primaryText = this.state.primaryText;
-					serverOptions.push(obj);
-					this.props.updateRootState("serverOptions", serverOptions);
-					this.props.updateRootState("urlPrefix", this.state.value);
-					this.handleClose();
-				}
-			}
-		},
-		handleClose: function handleClose() {
-			this.setState({ primaryText: '' });
-			this.setState({ value: '' });
-			this.setState({ primaryEmpty: false });
-			this.setState({ valueEmpty: false });
-			this.props.updateRootState("openUrlInput", false);
-		},
-		render: function render() {
-			var actions = [_react2.default.createElement(_FlatButton2.default, { label: 'Submit', primary: true, onTouchTap: this.handleSubmit }), _react2.default.createElement(_FlatButton2.default, { label: 'Cancel', primary: true, onTouchTap: this.handleClose })];
-			return _react2.default.createElement(
-				_Dialog2.default,
-				{ actions: actions, modal: false, open: this.props.openUrlInput, onRequestClose: this.handleClose },
-				_react2.default.createElement(_TextField2.default, { hintText: 'Enter a name to identify the server', errorText: this.state.primaryEmpty ? "This field is required." : null, floatingLabelText: 'Server Name', value: this.state.primaryText, onChange: this.handleChangePrimaryText }),
-				_react2.default.createElement('br', null),
-				_react2.default.createElement(_TextField2.default, { hintText: 'Enter a url', errorText: this.state.valueEmpty ? "This field is required." : null, floatingLabelText: 'Url', value: this.state.value, onChange: this.handleChangeValue })
-			);
-		}
-	});
-
-	exports.default = UrlDialog;
 
 /***/ }
 /******/ ]);
