@@ -72,6 +72,10 @@
 
 	var _SettingForm2 = _interopRequireDefault(_SettingForm);
 
+	var _UrlDialog = __webpack_require__(487);
+
+	var _UrlDialog2 = _interopRequireDefault(_UrlDialog);
+
 	var _reactTapEventPlugin = __webpack_require__(474);
 
 	var _reactTapEventPlugin2 = _interopRequireDefault(_reactTapEventPlugin);
@@ -107,18 +111,45 @@
 	var ContentBox = _react2.default.createClass({
 	    displayName: 'ContentBox',
 
+	    loadUrlMapping: function loadUrlMapping() {
+	        _jquery2.default.ajax({
+	            url: '/urlMapping.json',
+	            dataType: 'json',
+	            cache: false,
+	            success: function (data) {
+	                this.setState({ urlMapping: data });
+	            }.bind(this),
+	            error: function (xhr, status, err) {
+	                alert("Can't load url mapping!");
+	            }.bind(this)
+	        });
+	    },
 	    getInitialState: function getInitialState() {
 	        return {
 	            cids: [],
 	            activeCid: '',
 	            urlMapping: [],
 	            urlPrefix: 'http://campaign.vm5apis.com',
-	            openManager: false
+	            serverOptions: [{
+	                id: 0,
+	                value: "http://campaign.vm5apis.com",
+	                primaryText: "Local"
+	            }, {
+	                id: 1,
+	                value: "http://mock.adserver.vm5apis.com",
+	                primaryText: "Cloud"
+	            }, {
+	                id: 2,
+	                value: "Set url",
+	                primaryText: "Set url..."
+	            }],
+	            openManager: false,
+	            openUrlInput: false,
+	            tab: 'setting'
 	        };
 	    },
 	    componentDidMount: function componentDidMount() {
-	        //this.loadUrlMapping();
-	        this.setState({ urlMapping: _urlMapping2.default });
+	        this.loadUrlMapping();
 	    },
 	    updateRootState: function updateRootState(key, value) {
 	        var obj = {};
@@ -142,7 +173,9 @@
 	        this.setState({ cids: array });
 	    },
 	    handleChangeTab: function handleChangeTab(value) {
-	        this.setState({ tab: value });
+	        if (value == "setting" || value == "log") {
+	            this.setState({ tab: value });
+	        }
 	    },
 	    displayMainPanel: function displayMainPanel() {
 	        var style = {
@@ -162,20 +195,32 @@
 	                _index.Col,
 	                { xs: 12, md: 9 },
 	                _react2.default.createElement(
-	                    _index.Row,
-	                    null,
+	                    _Tabs.Tabs,
+	                    { value: this.state.tab, onChange: this.handleChangeTab, inkBarStyle: style.inkBar, tabItemContainerStyle: style.tab },
 	                    _react2.default.createElement(
-	                        _index.Col,
-	                        { xs: 6, style: { padding: '20px' } },
-	                        _react2.default.createElement(_SettingForm2.default, { mapping: this.state.urlMapping, cid: this.state.activeCid, urlPrefix: this.state.urlPrefix })
+	                        _Tabs.Tab,
+	                        { label: 'Setting Panel', value: 'setting' },
+	                        _react2.default.createElement(
+	                            _index.Row,
+	                            null,
+	                            _react2.default.createElement(
+	                                _index.Col,
+	                                { xs: 6, style: { padding: '20px' } },
+	                                _react2.default.createElement(_SettingForm2.default, { mapping: this.state.urlMapping, cid: this.state.activeCid, urlPrefix: this.state.urlPrefix })
+	                            ),
+	                            _react2.default.createElement(
+	                                _index.Col,
+	                                { xs: 6, style: { padding: '20px' } },
+	                                _react2.default.createElement(_EventPanel2.default, { cid: this.state.activeCid, url: debugUrl, pullInterval: 500 })
+	                            )
+	                        )
 	                    ),
 	                    _react2.default.createElement(
-	                        _index.Col,
-	                        { xs: 6, style: { padding: '20px' } },
-	                        _react2.default.createElement(_EventPanel2.default, { cid: this.state.activeCid, url: debugUrl, urlPrefix: this.state.urlPrefix, pullInterval: 500 })
+	                        _Tabs.Tab,
+	                        { label: 'Log Panel', value: 'log' },
+	                        _react2.default.createElement(_LogPanel2.default, { state: this.state, pushCid: this.pushCid, updateRootState: this.updateRootState })
 	                    )
-	                ),
-	                _react2.default.createElement(_LogPanel2.default, { state: this.state, pushCid: this.pushCid, updateRootState: this.updateRootState })
+	                )
 	            );
 	        } else {
 	            return _react2.default.createElement(
@@ -223,11 +268,12 @@
 	                    _react2.default.createElement(
 	                        _index.Col,
 	                        { xs: 12, md: 3 },
-	                        _react2.default.createElement(_CidPanel2.default, { cids: this.state.cids, urlPrefix: this.state.urlPrefix, activeCid: this.state.activeCid, updateRootState: this.updateRootState, updateRootCidName: this.updateRootCidName })
+	                        _react2.default.createElement(_CidPanel2.default, { cids: this.state.cids, serverOptions: this.state.serverOptions, urlPrefix: this.state.urlPrefix, activeCid: this.state.activeCid, updateRootState: this.updateRootState, updateRootCidName: this.updateRootCidName })
 	                    ),
 	                    this.displayMainPanel()
 	                ),
-	                _react2.default.createElement(_DialogPanel2.default, { openManager: this.state.openManager, cids: this.state.cids, updateRootState: this.updateRootState, updateRootCidName: this.updateRootCidName })
+	                _react2.default.createElement(_DialogPanel2.default, { openManager: this.state.openManager, cids: this.state.cids, updateRootState: this.updateRootState, updateRootCidName: this.updateRootCidName }),
+	                _react2.default.createElement(_UrlDialog2.default, { openUrlInput: this.state.openUrlInput, serverOptions: this.state.serverOptions, updateRootState: this.updateRootState })
 	            )
 	        );
 	    }
@@ -21670,7 +21716,11 @@
 	    },
 	    handleSelect: function handleSelect(e, key, value) {
 	        console.log("select value:", value);
-	        this.props.updateRootState("urlPrefix", value);
+	        if (value == "Set url") {
+	            this.props.updateRootState("openUrlInput", true);
+	        } else {
+	            this.props.updateRootState("urlPrefix", value);
+	        }
 	    },
 	    onClickManager: function onClickManager(e) {
 	        console.log("clicked!");
@@ -21732,6 +21782,9 @@
 	            var displayCid = cid.cid.substring(0, 25) + "...";
 	            return _react2.default.createElement(_MenuItem2.default, { key: cid.id, value: cid.cid, primaryText: cid.name == '' ? displayCid : cid.name, rightIcon: this.props.activeCid == cid.cid ? _react2.default.createElement(_navigationArrowDropRight2.default, null) : null, style: this.props.activeCid == cid.cid ? style.active : style.normal });
 	        }.bind(this));
+	        var serverOptions = this.props.serverOptions.map(function (option) {
+	            return _react2.default.createElement(_MenuItem2.default, { key: option.id, value: option.value, primaryText: option.primaryText });
+	        });
 	        return _react2.default.createElement(
 	            _Drawer2.default,
 	            { open: true },
@@ -21751,8 +21804,7 @@
 	                _react2.default.createElement(
 	                    _DropDownMenu2.default,
 	                    { value: this.props.urlPrefix, onChange: this.handleSelect },
-	                    _react2.default.createElement(_MenuItem2.default, { value: 'http://campaign.vm5apis.com', primaryText: 'Local' }),
-	                    _react2.default.createElement(_MenuItem2.default, { value: 'http://mock.adserver.vm5apis.com', primaryText: 'Cloud' })
+	                    serverOptions
 	                )
 	            ),
 	            _react2.default.createElement(_Divider2.default, null),
@@ -67648,7 +67700,6 @@
 	            vmNotYours: false,
 	            imgCorrupts: 'Not set',
 	            videoCorrupts: false,
-	            preRecordedVideo: false,
 	            mapping: [],
 	            debugTimeLimit: ''
 	        });
@@ -67665,7 +67716,6 @@
 	            vmNotYours: false,
 	            imgCorrupts: 'Not set',
 	            videoCorrupts: false,
-	            preRecordedVideo: false,
 	            mapping: [],
 	            debugTimeLimit: ''
 	        };
@@ -67719,7 +67769,7 @@
 	                this.loadDebugTime();
 	            }.bind(this),
 	            error: function (xhr, status, err) {
-	                alert("Error!!");
+	                alert("We can't process your request right now. Please check if you are connected to Mock-AP. If this error message keeps showing, please contact the person in charge (Alice/Gary/Denny/Cades)");
 	            }.bind(this)
 	        });
 	    },
@@ -67990,7 +68040,9 @@
 	                ),
 	                _react2.default.createElement(_Divider2.default, { style: style.shortLine }),
 	                _react2.default.createElement(_FormTextboxInput2.default, { order: '1', label: 'Language', id: 'language', state: this.props.state, updateState: this.props.updateState }),
+	                _react2.default.createElement('br', null),
 	                _react2.default.createElement(_FormTextboxInput2.default, { order: '2', label: 'Time Limit', id: 'timeLimit', state: this.props.state, updateState: this.props.updateState }),
+	                _react2.default.createElement('br', null),
 	                _react2.default.createElement(_FormDropdown2.default, { order: '3', label: 'HTTP Response', id: 'httpSelect', state: this.props.state, options: this.props.httpSelectOptions, updateState: this.props.updateState }),
 	                this.displayHTTPField()
 	            ),
@@ -68856,8 +68908,6 @@
 	                        ),
 	                        _react2.default.createElement(_Divider2.default, { style: style.shortLine }),
 	                        _react2.default.createElement(_FormRadioButtons2.default, { order: '1', label: 'Image Corrupts', id: 'imgCorrupts', state: this.props.state, options: this.props.corruptedImageOptions, updateState: this.props.updateState }),
-	                        _react2.default.createElement(_Divider2.default, { style: style.longLine }),
-	                        _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'Send Pre-recorded Video', id: 'preRecordedVideo', state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
 	                        _react2.default.createElement(_Divider2.default, { style: style.longLine })
 	                    )
 	                );
@@ -68891,8 +68941,6 @@
 	                        _react2.default.createElement(_FormRadioButtons2.default, { order: '1', label: 'Image Corrupts', id: 'imgCorrupts', state: this.props.state, options: this.props.corruptedImageOptions, updateState: this.props.updateState }),
 	                        _react2.default.createElement(_Divider2.default, { style: style.longLine }),
 	                        _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'Video Corrupts', id: 'videoCorrupts', state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
-	                        _react2.default.createElement(_Divider2.default, { style: style.longLine }),
-	                        _react2.default.createElement(_FormToggle2.default, { order: '3', label: 'Send Pre-recorded Video', id: 'preRecordedVideo', state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
 	                        _react2.default.createElement(_Divider2.default, { style: style.longLine })
 	                    )
 	                );
@@ -69579,6 +69627,7 @@
 	                    'div',
 	                    null,
 	                    _react2.default.createElement(_TextField2.default, { hintText: 'Start Time (sec)', floatingLabelText: 'Start Time', value: this.state.startTime, onChange: this.onChangeText.bind(this, "startTime") }),
+	                    _react2.default.createElement('br', null),
 	                    _react2.default.createElement(_TextField2.default, { hintText: 'Duration (sec)', floatingLabelText: 'Duration', value: this.state.duration, onChange: this.onChangeText.bind(this, "duration") })
 	                );
 	            } else if (this.state.action == "set-fps") {
@@ -69586,7 +69635,9 @@
 	                    'div',
 	                    null,
 	                    _react2.default.createElement(_TextField2.default, { hintText: 'Start Time (sec)', floatingLabelText: 'Start Time', value: this.state.startTime, onChange: this.onChangeText.bind(this, "startTime") }),
+	                    _react2.default.createElement('br', null),
 	                    _react2.default.createElement(_TextField2.default, { hintText: 'Duration (sec)', floatingLabelText: 'Duration', value: this.state.duration, onChange: this.onChangeText.bind(this, "duration") }),
+	                    _react2.default.createElement('br', null),
 	                    _react2.default.createElement(_TextField2.default, { hintText: 'Fps', floatingLabelText: 'Fps', value: this.state.fps, onChange: this.onChangeText.bind(this, "fps") })
 	                );
 	            } else {
@@ -70823,10 +70874,6 @@
 		"corruptedVideoCids": {
 			"display": "Video Corrupts",
 			"textinput": false
-		},
-		"preRecordedCids": {
-			"display": "Send Pre-recorded Video",
-			"textinput": false
 		}
 	};
 
@@ -70880,12 +70927,110 @@
 		"videoCorrupts": {
 			"type": "checkbox",
 			"url": "/v3/trial/set-next-video-frames-corrupted/:cid"
-		},
-		"preRecordedVideo": {
-			"type": "checkbox",
-			"url": "/v3/trial/set-next-pre-recorded/:cid"
 		}
 	};
+
+/***/ },
+/* 487 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+		value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(35);
+
+	var _Dialog = __webpack_require__(426);
+
+	var _Dialog2 = _interopRequireDefault(_Dialog);
+
+	var _FlatButton = __webpack_require__(428);
+
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
+
+	var _TextField = __webpack_require__(431);
+
+	var _TextField2 = _interopRequireDefault(_TextField);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var UrlDialog = _react2.default.createClass({
+		displayName: 'UrlDialog',
+
+		getInitialState: function getInitialState() {
+			return {
+				primaryText: '',
+				value: '',
+				primaryEmpty: false,
+				valueEmpty: false
+			};
+		},
+		handleChangePrimaryText: function handleChangePrimaryText(e) {
+			this.setState({ primaryText: e.target.value });
+			this.setState({ primaryEmpty: false });
+		},
+		handleChangeValue: function handleChangeValue(e) {
+			this.setState({ value: e.target.value });
+			this.setState({ valueEmpty: false });
+		},
+		handleSubmit: function handleSubmit() {
+			if (this.state.primaryText == '') {
+				this.setState({ primaryEmpty: true });
+			}
+			if (this.state.value == '') {
+				this.setState({ valueEmpty: true });
+			}
+			if (this.state.primaryText != '' && this.state.value != '') {
+				var len = this.props.serverOptions.length;
+				var obj = {
+					id: len,
+					value: "Set url",
+					primaryText: "Set url..."
+				};
+				var serverOptions = this.props.serverOptions;
+				var temp = _.find(serverOptions, { 'value': this.state.value });
+				if (temp) {
+					alert("This url already exist! The option for this url is \"" + temp.primaryText + "\".");
+					this.setState({ primaryText: '' });
+					this.setState({ value: '' });
+					this.setState({ primaryEmpty: false });
+					this.setState({ valueEmpty: false });
+				} else {
+					serverOptions[len - 1].value = this.state.value;
+					serverOptions[len - 1].primaryText = this.state.primaryText;
+					serverOptions.push(obj);
+					this.props.updateRootState("serverOptions", serverOptions);
+					this.props.updateRootState("urlPrefix", this.state.value);
+					this.handleClose();
+				}
+			}
+		},
+		handleClose: function handleClose() {
+			this.setState({ primaryText: '' });
+			this.setState({ value: '' });
+			this.setState({ primaryEmpty: false });
+			this.setState({ valueEmpty: false });
+			this.props.updateRootState("openUrlInput", false);
+		},
+		render: function render() {
+			var actions = [_react2.default.createElement(_FlatButton2.default, { label: 'Submit', primary: true, onTouchTap: this.handleSubmit }), _react2.default.createElement(_FlatButton2.default, { label: 'Cancel', primary: true, onTouchTap: this.handleClose })];
+			return _react2.default.createElement(
+				_Dialog2.default,
+				{ actions: actions, modal: false, open: this.props.openUrlInput, onRequestClose: this.handleClose },
+				_react2.default.createElement(_TextField2.default, { hintText: 'Enter a name to identify the server', errorText: this.state.primaryEmpty ? "This field is required." : null, floatingLabelText: 'Server Name', value: this.state.primaryText, onChange: this.handleChangePrimaryText }),
+				_react2.default.createElement('br', null),
+				_react2.default.createElement(_TextField2.default, { hintText: 'Enter a url', errorText: this.state.valueEmpty ? "This field is required." : null, floatingLabelText: 'Url', value: this.state.value, onChange: this.handleChangeValue })
+			);
+		}
+	});
+
+	exports.default = UrlDialog;
 
 /***/ }
 /******/ ]);
