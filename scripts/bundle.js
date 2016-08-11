@@ -111,19 +111,6 @@
 	var ContentBox = _react2.default.createClass({
 	    displayName: 'ContentBox',
 
-	    loadUrlMapping: function loadUrlMapping() {
-	        _jquery2.default.ajax({
-	            url: '/urlMapping.json',
-	            dataType: 'json',
-	            cache: false,
-	            success: function (data) {
-	                this.setState({ urlMapping: data });
-	            }.bind(this),
-	            error: function (xhr, status, err) {
-	                alert("Can't load url mapping!");
-	            }.bind(this)
-	        });
-	    },
 	    getInitialState: function getInitialState() {
 	        return {
 	            cids: [],
@@ -149,7 +136,7 @@
 	        };
 	    },
 	    componentDidMount: function componentDidMount() {
-	        this.loadUrlMapping();
+	        this.setState({ urlMapping: _urlMapping2.default });
 	    },
 	    updateRootState: function updateRootState(key, value) {
 	        var obj = {};
