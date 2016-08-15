@@ -52,9 +52,9 @@
 
 	var _reactDom = __webpack_require__(35);
 
-	var _CidPanel = __webpack_require__(175);
+	var _CidMenu = __webpack_require__(175);
 
-	var _CidPanel2 = _interopRequireDefault(_CidPanel);
+	var _CidMenu2 = _interopRequireDefault(_CidMenu);
 
 	var _DialogPanel = __webpack_require__(425);
 
@@ -68,15 +68,19 @@
 
 	var _LogPanel2 = _interopRequireDefault(_LogPanel);
 
-	var _SettingForm = __webpack_require__(459);
+	var _LogMenu = __webpack_require__(459);
+
+	var _LogMenu2 = _interopRequireDefault(_LogMenu);
+
+	var _SettingForm = __webpack_require__(462);
 
 	var _SettingForm2 = _interopRequireDefault(_SettingForm);
 
-	var _UrlDialog = __webpack_require__(475);
+	var _UrlDialog = __webpack_require__(478);
 
 	var _UrlDialog2 = _interopRequireDefault(_UrlDialog);
 
-	var _reactTapEventPlugin = __webpack_require__(476);
+	var _reactTapEventPlugin = __webpack_require__(479);
 
 	var _reactTapEventPlugin2 = _interopRequireDefault(_reactTapEventPlugin);
 
@@ -84,13 +88,13 @@
 
 	var _MuiThemeProvider2 = _interopRequireDefault(_MuiThemeProvider);
 
-	var _Tabs = __webpack_require__(482);
+	var _Tabs = __webpack_require__(485);
 
 	var _jquery = __webpack_require__(452);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _urlMapping = __webpack_require__(487);
+	var _urlMapping = __webpack_require__(490);
 
 	var _urlMapping2 = _interopRequireDefault(_urlMapping);
 
@@ -132,7 +136,10 @@
 	            }],
 	            openManager: false,
 	            openUrlInput: false,
-	            tab: 'setting'
+	            tab: "setting",
+	            sdkVersion: '',
+	            uiVersion: '',
+	            adId: ''
 	        };
 	    },
 	    componentDidMount: function componentDidMount() {
@@ -255,7 +262,8 @@
 	                    _react2.default.createElement(
 	                        _index.Col,
 	                        { xs: 12, md: 3 },
-	                        _react2.default.createElement(_CidPanel2.default, { cids: this.state.cids, serverOptions: this.state.serverOptions, urlPrefix: this.state.urlPrefix, activeCid: this.state.activeCid, updateRootState: this.updateRootState, updateRootCidName: this.updateRootCidName })
+	                        _react2.default.createElement(_CidMenu2.default, { cids: this.state.cids, open: this.state.tab == "setting", serverOptions: this.state.serverOptions, urlPrefix: this.state.urlPrefix, activeCid: this.state.activeCid, updateRootState: this.updateRootState }),
+	                        _react2.default.createElement(_LogMenu2.default, { open: this.state.tab == "log", serverOptions: this.state.serverOptions, urlPrefix: this.state.urlPrefix, cids: this.state.cids, activeCid: this.state.activeCid, updateRootState: this.updateRootState, sdkVersion: this.state.sdkVersion, uiVersion: this.state.uiVersion, adId: this.state.adId })
 	                    ),
 	                    this.displayMainPanel()
 	                ),
@@ -21694,8 +21702,8 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var CidPanel = _react2.default.createClass({
-	    displayName: 'CidPanel',
+	var CidMenu = _react2.default.createClass({
+	    displayName: 'CidMenu',
 
 	    handleChange: function handleChange(e, value) {
 	        console.log("cid panel value:", value);
@@ -21774,7 +21782,7 @@
 	        });
 	        return _react2.default.createElement(
 	            _Drawer2.default,
-	            { open: true },
+	            { open: this.props.open },
 	            _react2.default.createElement(
 	                _Menu2.default,
 	                { style: style.header },
@@ -21814,7 +21822,7 @@
 	    }
 	});
 
-	exports.default = CidPanel;
+	exports.default = CidMenu;
 
 /***/ },
 /* 176 */
@@ -67498,17 +67506,59 @@
 
 	var _Websocket2 = _interopRequireDefault(_Websocket);
 
+	var _Table = __webpack_require__(437);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var LogPanel = _react2.default.createClass({
 	    displayName: 'LogPanel',
 
 	    getInitialState: function getInitialState() {
-	        return { data: [] };
+	        return {
+	            logs: [],
+	            nowCid: '',
+	            sessionId: '',
+	            timer: null
+	        };
 	    },
 	    componentDidMount: function componentDidMount() {
 	        console.log("mount!");
 	        //alert("mount!");
+	    },
+	    handleOpen: function handleOpen(ws) {
+	        this.setState({ timer: setInterval(function () {
+	                ws.send('whatever');
+	                console.log("sent whatever");
+	            }, 3000) });
+	    },
+	    handleClose: function handleClose() {
+	        clearInterval(this.state.timer);
+	    },
+	    addNewCid: function addNewCid(result, cid, index) {
+	        var name = result.ua.ua.substring(0, 11) + " (" + cid.substring(0, 8) + ")";
+	        var details = result.ua.ua;
+	        if (result.ua.browser.name) {
+	            name = result.ua.browser.name + " (" + cid.substring(0, 8) + ")";
+	            details = result.ua.browser.name;
+	        }
+	        if (result.ua.device.vendor) {
+	            name = result.ua.device.vendor + ", " + result.ua.browser.name + " (" + cid.substring(0, 8) + ")";
+	            details = result.ua.device.vendor + ", " + result.ua.device.model + ", " + result.ua.browser.name;
+	        }
+	        this.props.pushCid(cid, name, details);
+	        if (this.props.state.activeCid == '') {
+	            var sessionId = result["@data"]["@couple_tokens"].adplay_session_id;
+	            this.props.updateRootState("activeCid", cid);
+	            this.setState({ nowCid: cid });
+	            this.setState({ sessionId: sessionId });
+	        }
+	        console.log(cid, name, details);
+	    },
+	    checkAndSetState: function checkAndSetState(key, value) {
+	        if (!value) {
+	            value = "No information";
+	        }
+	        this.props.updateRootState(key, value);
 	    },
 	    handleData: function handleData(data) {
 	        var result = JSON.parse(data);
@@ -67516,32 +67566,141 @@
 	        var index = _.findIndex(this.props.state.cids, function (item) {
 	            return item.cid == cid;
 	        });
-
 	        if (index < 0) {
-	            var name = result.ua.ua.substring(0, 11) + " (" + cid.substring(0, 8) + ")";
-	            var details = result.ua.ua;
-	            if (result.ua.browser.name) {
-	                name = result.ua.browser.name + " (" + cid.substring(0, 8) + ")";
-	                details = result.ua.browser.name;
+	            this.addNewCid(result, cid, index);
+	        } else {
+	            var sessionId = result["@data"]["@couple_tokens"].adplay_session_id;
+	            var sdkVersion = result["@data"]["common"].sdkvs;
+	            var uiVersion = result["@data"]["common"].ui_version;
+	            var adId = result["@data"]["common"].ad_id;
+	            var logs = [];
+	            if (cid == this.state.nowCid && sessionId != this.state.sessionId) {
+	                this.setState({ sessionId: sessionId });
+	                this.props.updateRootState("tab", "log");
+	                this.checkAndSetState("sdkVersion", sdkVersion);
+	                this.checkAndSetState("uiVersion", uiVersion);
+	                this.checkAndSetState("adId", adId);
+	                logs.push(result);
+	                this.setState({ logs: logs });
+	                console.log(this.state.sessionId);
+	                console.log(this.state.logs);
+	            } else if (cid == this.state.nowCid && sessionId == this.state.sessionId) {
+	                logs = this.state.logs;
+	                logs.push(result);
+	                this.setState({ logs: logs });
+	                console.log(this.state.sessionId);
+	                console.log(this.state.logs);
 	            }
-	            if (result.ua.device.vendor) {
-	                name = result.ua.device.vendor + ", " + result.ua.browser.name + " (" + cid.substring(0, 8) + ")";
-	                details = result.ua.device.vendor + ", " + result.ua.device.model + ", " + result.ua.browser.name;
-	            }
-	            this.props.pushCid(cid, name, details);
-	            if (this.props.state.activeCid == '') {
-	                this.props.updateRootState("activeCid", cid);
-	            }
-	            console.log(cid, name, details);
 	        }
-	        this.setState({ data: result });
-	        console.log(result);
+	    },
+	    displayTable: function displayTable() {
+	        var style = {
+	            noWidth: {
+	                width: '36px'
+	            },
+	            typeWidth: {
+	                width: '150px'
+	            },
+	            nameWidth: {
+	                width: '300px'
+	            }
+	        };
+	        if (this.props.state.activeCid != '') {
+	            return _react2.default.createElement(
+	                _Table.Table,
+	                { height: '584px', fixedHeader: true, selectable: false },
+	                _react2.default.createElement(
+	                    _Table.TableHeader,
+	                    { displaySelectAll: false, adjustForCheckbox: false, enableSelectAll: false },
+	                    _react2.default.createElement(
+	                        _Table.TableRow,
+	                        null,
+	                        _react2.default.createElement(
+	                            _Table.TableHeaderColumn,
+	                            { style: style.noWidth },
+	                            'No.'
+	                        ),
+	                        _react2.default.createElement(
+	                            _Table.TableHeaderColumn,
+	                            { style: style.typeWidth, tooltip: '@event_type' },
+	                            'Event Type'
+	                        ),
+	                        _react2.default.createElement(
+	                            _Table.TableHeaderColumn,
+	                            { style: style.nameWidth, tooltip: '@event_name' },
+	                            'Event Name'
+	                        ),
+	                        _react2.default.createElement(
+	                            _Table.TableHeaderColumn,
+	                            { tooltip: '@event_extra.score' },
+	                            'Score'
+	                        ),
+	                        _react2.default.createElement(
+	                            _Table.TableHeaderColumn,
+	                            { tooltip: '@event_extra.sec' },
+	                            'Second'
+	                        ),
+	                        _react2.default.createElement(
+	                            _Table.TableHeaderColumn,
+	                            { tooltip: '@event_extra.fps' },
+	                            'Fps'
+	                        )
+	                    )
+	                ),
+	                _react2.default.createElement(
+	                    _Table.TableBody,
+	                    { displayRowCheckbox: false, showRowHover: true, stripedRows: false },
+	                    this.state.logs.map(function (log, index) {
+	                        return _react2.default.createElement(
+	                            _Table.TableRow,
+	                            { key: index },
+	                            _react2.default.createElement(
+	                                _Table.TableRowColumn,
+	                                { style: style.noWidth },
+	                                index
+	                            ),
+	                            _react2.default.createElement(
+	                                _Table.TableRowColumn,
+	                                { style: style.typeWidth },
+	                                log["@data"]["@event_type"]
+	                            ),
+	                            _react2.default.createElement(
+	                                _Table.TableRowColumn,
+	                                { style: style.nameWidth },
+	                                log["@data"]["@event_name"]
+	                            ),
+	                            _react2.default.createElement(
+	                                _Table.TableRowColumn,
+	                                null,
+	                                log["@data"]["@event_extra"] ? log["@data"]["@event_extra"].score : ""
+	                            ),
+	                            _react2.default.createElement(
+	                                _Table.TableRowColumn,
+	                                null,
+	                                log["@data"]["@event_extra"] ? log["@data"]["@event_extra"].sec : ""
+	                            ),
+	                            _react2.default.createElement(
+	                                _Table.TableRowColumn,
+	                                null,
+	                                log["@data"]["@event_extra"] ? log["@data"]["@event_extra"].fps : ""
+	                            )
+	                        );
+	                    })
+	                )
+	            );
+	        }
 	    },
 	    render: function render() {
+	        if (this.props.state.activeCid != this.state.nowCid) {
+	            this.setState({ logs: [] });
+	            this.setState({ nowCid: this.props.state.activeCid });
+	            this.setState({ sessionId: '' });
+	        }
 	        return _react2.default.createElement(
 	            'div',
 	            null,
-	            _react2.default.createElement(_Websocket2.default, { url: 'ws://qa-log-proxy.vm5apis.com', onMessage: this.handleData })
+	            this.displayTable(),
+	            _react2.default.createElement(_Websocket2.default, { url: 'ws://qa-log-proxy.vm5apis.com', debug: true, onMessage: this.handleData, onOpen: this.handleOpen, onClose: this.handleClose })
 	        );
 	    }
 	});
@@ -67585,7 +67744,7 @@
 	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Websocket).call(this, props));
 
 	    _this.state = {
-	      ws: new WebSocket(_this.props.url),
+	      ws: new WebSocket(_this.props.url, _this.props.protocol),
 	      attempts: 1
 	    };
 	    return _this;
@@ -67612,6 +67771,9 @@
 
 	      websocket.onopen = function () {
 	        _this2.logging('Websocket connected');
+	        if (_this2.props.onOpen) {
+	          _this2.props.onOpen(websocket);
+	        }
 	      };
 
 	      websocket.onmessage = function (evt) {
@@ -67620,7 +67782,7 @@
 
 	      websocket.onclose = function () {
 	        _this2.logging('Websocket disconnected');
-
+	        _this2.props.onClose();
 	        if (_this2.props.reconnect) {
 	          var time = _this2.generateInterval(_this2.state.attempts);
 	          setTimeout(function () {
@@ -67659,8 +67821,11 @@
 	Websocket.propTypes = {
 	  url: _react2.default.PropTypes.string.isRequired,
 	  onMessage: _react2.default.PropTypes.func.isRequired,
+	  onOpen: _react2.default.PropTypes.func,
+	  onClose: _react2.default.PropTypes.func,
 	  debug: _react2.default.PropTypes.bool,
-	  reconnect: _react2.default.PropTypes.bool
+	  reconnect: _react2.default.PropTypes.bool,
+	  protocol: _react2.default.PropTypes.string
 	};
 
 	exports.default = Websocket;
@@ -67681,11 +67846,414 @@
 
 	var _reactDom = __webpack_require__(35);
 
+	var _index = __webpack_require__(176);
+
+	var _navigationArrowDropRight = __webpack_require__(186);
+
+	var _navigationArrowDropRight2 = _interopRequireDefault(_navigationArrowDropRight);
+
+	var _Divider = __webpack_require__(202);
+
+	var _Divider2 = _interopRequireDefault(_Divider);
+
+	var _Drawer = __webpack_require__(204);
+
+	var _Drawer2 = _interopRequireDefault(_Drawer);
+
+	var _DropDownMenu = __webpack_require__(215);
+
+	var _DropDownMenu2 = _interopRequireDefault(_DropDownMenu);
+
+	var _List = __webpack_require__(460);
+
+	var _Menu = __webpack_require__(421);
+
+	var _Menu2 = _interopRequireDefault(_Menu);
+
+	var _MenuItem = __webpack_require__(422);
+
+	var _MenuItem2 = _interopRequireDefault(_MenuItem);
+
+	var _RaisedButton = __webpack_require__(423);
+
+	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
+
+	var _Subheader = __webpack_require__(222);
+
+	var _Subheader2 = _interopRequireDefault(_Subheader);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var LogMenu = _react2.default.createClass({
+	    displayName: 'LogMenu',
+
+	    handleChange: function handleChange(e, value) {
+	        console.log("cid panel value:", value);
+	        this.props.updateRootState("activeCid", value);
+	    },
+	    handleSelect: function handleSelect(e, key, value) {
+	        console.log("select value:", value);
+	        if (value == "Set url") {
+	            this.props.updateRootState("openUrlInput", true);
+	        } else {
+	            this.props.updateRootState("urlPrefix", value);
+	        }
+	    },
+	    onClickManager: function onClickManager(e) {
+	        console.log("clicked!");
+	        this.props.updateRootState("openManager", true);
+	    },
+	    render: function render() {
+	        var style = {
+	            active: {
+	                backgroundColor: '#cccccc',
+	                fontFamily: 'Roboto, sans-serif',
+	                fontSize: '14px',
+	                cursor: 'pointer',
+	                width: '256px'
+	            },
+	            normal: {
+	                backgroundColor: '#ffffff',
+	                fontFamily: 'Roboto, sans-serif',
+	                fontSize: '14px',
+	                cursor: 'pointer',
+	                width: '256px'
+	            },
+	            title: {
+	                fontFamily: 'Roboto, sans-serif',
+	                fontWeight: '400',
+	                fontSize: '28px',
+	                marginTop: '10px'
+	            },
+	            div: {
+	                padding: '0px 16px'
+	            },
+	            header: {
+	                padding: '0px',
+	                backgroundColor: '#fc981c'
+	            },
+	            headerFont: {
+	                fontFamily: 'Roboto, sans-serif',
+	                fontWeight: '300',
+	                fontSize: '24px',
+	                color: '#ffffff'
+	            },
+	            managerButton: {
+	                margin: '6px 12px'
+	            },
+	            buttonTextActive: {
+	                display: 'inline-block',
+	                textTransform: 'capitalize',
+	                color: '#ffffff'
+	            },
+	            menuHeight: {
+	                height: '536px'
+	            },
+	            label: {
+	                fontFamily: 'Roboto, sans-serif',
+	                fontWeight: '400',
+	                fontSize: '16px'
+	            }
+	        };
+	        var serverOptions = this.props.serverOptions.map(function (option) {
+	            return _react2.default.createElement(_MenuItem2.default, { key: option.id, value: option.value, primaryText: option.primaryText });
+	        });
+	        var index = _.findIndex(this.props.cids, function (item) {
+	            return item.cid == this.props.activeCid;
+	        }.bind(this));
+	        return _react2.default.createElement(
+	            _Drawer2.default,
+	            { open: this.props.open },
+	            _react2.default.createElement(
+	                _Menu2.default,
+	                { style: style.header },
+	                _react2.default.createElement(_MenuItem2.default, { key: 1, primaryText: 'Log Panel', style: style.headerFont })
+	            ),
+	            _react2.default.createElement(
+	                'div',
+	                { style: style.div },
+	                _react2.default.createElement(
+	                    'label',
+	                    { style: style.label },
+	                    'Server: '
+	                ),
+	                _react2.default.createElement(
+	                    _DropDownMenu2.default,
+	                    { value: this.props.urlPrefix, onChange: this.handleSelect, disabled: true },
+	                    serverOptions
+	                )
+	            ),
+	            _react2.default.createElement(_Divider2.default, null),
+	            _react2.default.createElement(
+	                _Menu2.default,
+	                { style: style.menuHeight },
+	                _react2.default.createElement(
+	                    _List.List,
+	                    null,
+	                    _react2.default.createElement(
+	                        _Subheader2.default,
+	                        null,
+	                        'Name of Device'
+	                    ),
+	                    _react2.default.createElement(_List.ListItem, { primaryText: index >= 0 ? this.props.cids[index].name : "" }),
+	                    _react2.default.createElement(
+	                        _Subheader2.default,
+	                        null,
+	                        'Cid'
+	                    ),
+	                    _react2.default.createElement(_List.ListItem, { primaryText: this.props.activeCid }),
+	                    _react2.default.createElement(
+	                        _Subheader2.default,
+	                        null,
+	                        'SDK Version'
+	                    ),
+	                    _react2.default.createElement(_List.ListItem, { primaryText: this.props.sdkVersion }),
+	                    _react2.default.createElement(
+	                        _Subheader2.default,
+	                        null,
+	                        'UI Version'
+	                    ),
+	                    _react2.default.createElement(_List.ListItem, { primaryText: this.props.uiVersion }),
+	                    _react2.default.createElement(
+	                        _Subheader2.default,
+	                        null,
+	                        'Ad Id'
+	                    ),
+	                    _react2.default.createElement(_List.ListItem, { primaryText: this.props.adId })
+	                )
+	            ),
+	            _react2.default.createElement(_Divider2.default, null),
+	            _react2.default.createElement(
+	                _index.Row,
+	                { center: 'xs' },
+	                _react2.default.createElement(_index.Col, { xs: 12 })
+	            )
+	        );
+	    }
+	});
+
+	exports.default = LogMenu;
+
+/***/ },
+/* 460 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = exports.MakeSelectable = exports.ListItem = exports.List = undefined;
+
+	var _List2 = __webpack_require__(221);
+
+	var _List3 = _interopRequireDefault(_List2);
+
+	var _ListItem2 = __webpack_require__(400);
+
+	var _ListItem3 = _interopRequireDefault(_ListItem2);
+
+	var _MakeSelectable2 = __webpack_require__(461);
+
+	var _MakeSelectable3 = _interopRequireDefault(_MakeSelectable2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.List = _List3.default;
+	exports.ListItem = _ListItem3.default;
+	exports.MakeSelectable = _MakeSelectable3.default;
+	exports.default = _List3.default;
+
+/***/ },
+/* 461 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.MakeSelectable = undefined;
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _simpleAssign = __webpack_require__(200);
+
+	var _simpleAssign2 = _interopRequireDefault(_simpleAssign);
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _colorManipulator = __webpack_require__(351);
+
+	var _deprecatedPropType = __webpack_require__(224);
+
+	var _deprecatedPropType2 = _interopRequireDefault(_deprecatedPropType);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var MakeSelectable = exports.MakeSelectable = function MakeSelectable(Component) {
+	  var _class, _temp2;
+
+	  return _temp2 = _class = function (_Component) {
+	    _inherits(_class, _Component);
+
+	    function _class() {
+	      var _Object$getPrototypeO;
+
+	      var _temp, _this, _ret;
+
+	      _classCallCheck(this, _class);
+
+	      for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	        args[_key] = arguments[_key];
+	      }
+
+	      return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(_class)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.hasSelectedDescendant = function (previousValue, child) {
+	        if (_react2.default.isValidElement(child) && child.props.nestedItems && child.props.nestedItems.length > 0) {
+	          return child.props.nestedItems.reduce(_this.hasSelectedDescendant, previousValue);
+	        }
+	        return previousValue || _this.isChildSelected(child, _this.props);
+	      }, _this.handleItemTouchTap = function (event, item) {
+	        var valueLink = _this.getValueLink(_this.props);
+	        var itemValue = item.props.value;
+
+	        if (itemValue !== valueLink.value) {
+	          valueLink.requestChange(event, itemValue);
+	        }
+	      }, _temp), _possibleConstructorReturn(_this, _ret);
+	    }
+
+	    _createClass(_class, [{
+	      key: 'getValueLink',
+	      value: function getValueLink(props) {
+	        return props.valueLink || {
+	          value: props.value,
+	          requestChange: props.onChange
+	        };
+	      }
+	    }, {
+	      key: 'extendChild',
+	      value: function extendChild(child, styles, selectedItemStyle) {
+	        var _this2 = this;
+
+	        if (child && child.type && child.type.muiName === 'ListItem') {
+	          var selected = this.isChildSelected(child, this.props);
+	          var selectedChildrenStyles = void 0;
+	          if (selected) {
+	            selectedChildrenStyles = (0, _simpleAssign2.default)({}, styles, selectedItemStyle);
+	          }
+
+	          var mergedChildrenStyles = (0, _simpleAssign2.default)({}, child.props.style, selectedChildrenStyles);
+
+	          this.keyIndex += 1;
+
+	          return _react2.default.cloneElement(child, {
+	            onTouchTap: function onTouchTap(event) {
+	              _this2.handleItemTouchTap(event, child);
+	              if (child.props.onTouchTap) {
+	                child.props.onTouchTap(event);
+	              }
+	            },
+	            key: this.keyIndex,
+	            style: mergedChildrenStyles,
+	            nestedItems: child.props.nestedItems.map(function (child) {
+	              return _this2.extendChild(child, styles, selectedItemStyle);
+	            }),
+	            initiallyOpen: this.isInitiallyOpen(child)
+	          });
+	        } else {
+	          return child;
+	        }
+	      }
+	    }, {
+	      key: 'isInitiallyOpen',
+	      value: function isInitiallyOpen(child) {
+	        if (child.props.initiallyOpen) {
+	          return child.props.initiallyOpen;
+	        }
+	        return this.hasSelectedDescendant(false, child);
+	      }
+	    }, {
+	      key: 'isChildSelected',
+	      value: function isChildSelected(child, props) {
+	        return this.getValueLink(props).value === child.props.value;
+	      }
+	    }, {
+	      key: 'render',
+	      value: function render() {
+	        var _this3 = this;
+
+	        var _props = this.props;
+	        var children = _props.children;
+	        var selectedItemStyle = _props.selectedItemStyle;
+
+
+	        this.keyIndex = 0;
+	        var styles = {};
+
+	        if (!selectedItemStyle) {
+	          var textColor = this.context.muiTheme.baseTheme.palette.textColor;
+	          styles.backgroundColor = (0, _colorManipulator.fade)(textColor, 0.2);
+	        }
+
+	        return _react2.default.createElement(
+	          Component,
+	          _extends({}, this.props, this.state),
+	          _react2.default.Children.map(children, function (child) {
+	            return _this3.extendChild(child, styles, selectedItemStyle);
+	          })
+	        );
+	      }
+	    }]);
+
+	    return _class;
+	  }(Component), _class.propTypes = {
+	    children: _react.PropTypes.node,
+	    onChange: _react.PropTypes.func,
+	    selectedItemStyle: _react.PropTypes.object,
+	    value: _react.PropTypes.any,
+	    valueLink: (0, _deprecatedPropType2.default)(_react.PropTypes.shape({
+	      value: _react.PropTypes.any,
+	      requestChange: _react.PropTypes.func
+	    }), 'This property is deprecated due to his low popularity. Use the value and onChange property.\n        It will be removed with v0.16.0.')
+	  }, _class.contextTypes = {
+	    muiTheme: _react.PropTypes.object.isRequired
+	  }, _temp2;
+	};
+
+	exports.default = MakeSelectable;
+
+/***/ },
+/* 462 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(35);
+
 	var _jquery = __webpack_require__(452);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _send = __webpack_require__(460);
+	var _send = __webpack_require__(463);
 
 	var _send2 = _interopRequireDefault(_send);
 
@@ -67693,15 +68261,15 @@
 
 	var _FlatButton2 = _interopRequireDefault(_FlatButton);
 
-	var _SettingPageOne = __webpack_require__(461);
+	var _SettingPageOne = __webpack_require__(464);
 
 	var _SettingPageOne2 = _interopRequireDefault(_SettingPageOne);
 
-	var _SettingPageTwo = __webpack_require__(470);
+	var _SettingPageTwo = __webpack_require__(473);
 
 	var _SettingPageTwo2 = _interopRequireDefault(_SettingPageTwo);
 
-	var _SettingPageThree = __webpack_require__(474);
+	var _SettingPageThree = __webpack_require__(477);
 
 	var _SettingPageThree2 = _interopRequireDefault(_SettingPageThree);
 
@@ -67970,7 +68538,7 @@
 	exports.default = SettingForm;
 
 /***/ },
-/* 460 */
+/* 463 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68007,7 +68575,7 @@
 	exports.default = ContentSend;
 
 /***/ },
-/* 461 */
+/* 464 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68030,15 +68598,15 @@
 
 	var _Paper2 = _interopRequireDefault(_Paper);
 
-	var _FormDropdown = __webpack_require__(462);
+	var _FormDropdown = __webpack_require__(465);
 
 	var _FormDropdown2 = _interopRequireDefault(_FormDropdown);
 
-	var _FormRadioButtons = __webpack_require__(463);
+	var _FormRadioButtons = __webpack_require__(466);
 
 	var _FormRadioButtons2 = _interopRequireDefault(_FormRadioButtons);
 
-	var _FormTextboxInput = __webpack_require__(469);
+	var _FormTextboxInput = __webpack_require__(472);
 
 	var _FormTextboxInput2 = _interopRequireDefault(_FormTextboxInput);
 
@@ -68114,7 +68682,7 @@
 	exports.default = SettingPageOne;
 
 /***/ },
-/* 462 */
+/* 465 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68184,7 +68752,7 @@
 	exports.default = FormDropdown;
 
 /***/ },
-/* 463 */
+/* 466 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68199,7 +68767,7 @@
 
 	var _reactDom = __webpack_require__(35);
 
-	var _RadioButton = __webpack_require__(464);
+	var _RadioButton = __webpack_require__(467);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -68254,7 +68822,7 @@
 	exports.default = FormRadioButtons;
 
 /***/ },
-/* 464 */
+/* 467 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68264,11 +68832,11 @@
 	});
 	exports.default = exports.RadioButtonGroup = exports.RadioButton = undefined;
 
-	var _RadioButton2 = __webpack_require__(465);
+	var _RadioButton2 = __webpack_require__(468);
 
 	var _RadioButton3 = _interopRequireDefault(_RadioButton2);
 
-	var _RadioButtonGroup2 = __webpack_require__(468);
+	var _RadioButtonGroup2 = __webpack_require__(471);
 
 	var _RadioButtonGroup3 = _interopRequireDefault(_RadioButtonGroup2);
 
@@ -68279,7 +68847,7 @@
 	exports.default = _RadioButton3.default;
 
 /***/ },
-/* 465 */
+/* 468 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68308,11 +68876,11 @@
 
 	var _EnhancedSwitch2 = _interopRequireDefault(_EnhancedSwitch);
 
-	var _radioButtonUnchecked = __webpack_require__(466);
+	var _radioButtonUnchecked = __webpack_require__(469);
 
 	var _radioButtonUnchecked2 = _interopRequireDefault(_radioButtonUnchecked);
 
-	var _radioButtonChecked = __webpack_require__(467);
+	var _radioButtonChecked = __webpack_require__(470);
 
 	var _radioButtonChecked2 = _interopRequireDefault(_radioButtonChecked);
 
@@ -68541,7 +69109,7 @@
 	exports.default = RadioButton;
 
 /***/ },
-/* 466 */
+/* 469 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68578,7 +69146,7 @@
 	exports.default = ToggleRadioButtonUnchecked;
 
 /***/ },
-/* 467 */
+/* 470 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68615,7 +69183,7 @@
 	exports.default = ToggleRadioButtonChecked;
 
 /***/ },
-/* 468 */
+/* 471 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -68636,7 +69204,7 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _RadioButton = __webpack_require__(464);
+	var _RadioButton = __webpack_require__(467);
 
 	var _RadioButton2 = _interopRequireDefault(_RadioButton);
 
@@ -68831,7 +69399,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 469 */
+/* 472 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68868,7 +69436,7 @@
 	exports.default = FormTextboxInput;
 
 /***/ },
-/* 470 */
+/* 473 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -68887,11 +69455,11 @@
 
 	var _Divider2 = _interopRequireDefault(_Divider);
 
-	var _FormRadioButtons = __webpack_require__(463);
+	var _FormRadioButtons = __webpack_require__(466);
 
 	var _FormRadioButtons2 = _interopRequireDefault(_FormRadioButtons);
 
-	var _FormToggle = __webpack_require__(471);
+	var _FormToggle = __webpack_require__(474);
 
 	var _FormToggle2 = _interopRequireDefault(_FormToggle);
 
@@ -69008,7 +69576,7 @@
 	exports.default = SettingPageTwo;
 
 /***/ },
-/* 471 */
+/* 474 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -69023,7 +69591,7 @@
 
 	var _reactDom = __webpack_require__(35);
 
-	var _Toggle = __webpack_require__(472);
+	var _Toggle = __webpack_require__(475);
 
 	var _Toggle2 = _interopRequireDefault(_Toggle);
 
@@ -69053,7 +69621,7 @@
 	exports.default = FormToggle;
 
 /***/ },
-/* 472 */
+/* 475 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -69063,7 +69631,7 @@
 	});
 	exports.default = undefined;
 
-	var _Toggle = __webpack_require__(473);
+	var _Toggle = __webpack_require__(476);
 
 	var _Toggle2 = _interopRequireDefault(_Toggle);
 
@@ -69072,7 +69640,7 @@
 	exports.default = _Toggle2.default;
 
 /***/ },
-/* 473 */
+/* 476 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -69366,7 +69934,7 @@
 	exports.default = Toggle;
 
 /***/ },
-/* 474 */
+/* 477 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -69385,7 +69953,7 @@
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _send = __webpack_require__(460);
+	var _send = __webpack_require__(463);
 
 	var _send2 = _interopRequireDefault(_send);
 
@@ -69401,7 +69969,7 @@
 
 	var _Paper2 = _interopRequireDefault(_Paper);
 
-	var _RadioButton = __webpack_require__(464);
+	var _RadioButton = __webpack_require__(467);
 
 	var _RaisedButton = __webpack_require__(423);
 
@@ -69821,7 +70389,7 @@
 	exports.default = SettingPageThree;
 
 /***/ },
-/* 475 */
+/* 478 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -69923,11 +70491,11 @@
 	exports.default = UrlDialog;
 
 /***/ },
-/* 476 */
+/* 479 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(477);
-	var defaultClickRejectionStrategy = __webpack_require__(478);
+	/* WEBPACK VAR INJECTION */(function(process) {var invariant = __webpack_require__(480);
+	var defaultClickRejectionStrategy = __webpack_require__(481);
 
 	var alreadyInjected = false;
 
@@ -69949,14 +70517,14 @@
 	  alreadyInjected = true;
 
 	  __webpack_require__(44).injection.injectEventPluginsByName({
-	    'TapEventPlugin':       __webpack_require__(479)(shouldRejectClick)
+	    'TapEventPlugin':       __webpack_require__(482)(shouldRejectClick)
 	  });
 	};
 
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 477 */
+/* 480 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -70011,7 +70579,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 478 */
+/* 481 */
 /***/ function(module, exports) {
 
 	module.exports = function(lastTouchEvent, clickTimestamp) {
@@ -70022,7 +70590,7 @@
 
 
 /***/ },
-/* 479 */
+/* 482 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -70050,10 +70618,10 @@
 	var EventPluginUtils = __webpack_require__(46);
 	var EventPropagators = __webpack_require__(43);
 	var SyntheticUIEvent = __webpack_require__(77);
-	var TouchEventUtils = __webpack_require__(480);
+	var TouchEventUtils = __webpack_require__(483);
 	var ViewportMetrics = __webpack_require__(78);
 
-	var keyOf = __webpack_require__(481);
+	var keyOf = __webpack_require__(484);
 	var topLevelTypes = EventConstants.topLevelTypes;
 
 	var isStartish = EventPluginUtils.isStartish;
@@ -70198,7 +70766,7 @@
 
 
 /***/ },
-/* 480 */
+/* 483 */
 /***/ function(module, exports) {
 
 	/**
@@ -70246,7 +70814,7 @@
 
 
 /***/ },
-/* 481 */
+/* 484 */
 /***/ function(module, exports) {
 
 	/**
@@ -70286,7 +70854,7 @@
 	module.exports = keyOf;
 
 /***/ },
-/* 482 */
+/* 485 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -70296,11 +70864,11 @@
 	});
 	exports.default = exports.Tabs = exports.Tab = undefined;
 
-	var _Tab2 = __webpack_require__(483);
+	var _Tab2 = __webpack_require__(486);
 
 	var _Tab3 = _interopRequireDefault(_Tab2);
 
-	var _Tabs2 = __webpack_require__(484);
+	var _Tabs2 = __webpack_require__(487);
 
 	var _Tabs3 = _interopRequireDefault(_Tabs2);
 
@@ -70311,7 +70879,7 @@
 	exports.default = _Tabs3.default;
 
 /***/ },
-/* 483 */
+/* 486 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -70507,7 +71075,7 @@
 	exports.default = Tab;
 
 /***/ },
-/* 484 */
+/* 487 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
@@ -70532,11 +71100,11 @@
 
 	var _reactDom2 = _interopRequireDefault(_reactDom);
 
-	var _TabTemplate = __webpack_require__(485);
+	var _TabTemplate = __webpack_require__(488);
 
 	var _TabTemplate2 = _interopRequireDefault(_TabTemplate);
 
-	var _InkBar = __webpack_require__(486);
+	var _InkBar = __webpack_require__(489);
 
 	var _InkBar2 = _interopRequireDefault(_InkBar);
 
@@ -70814,7 +71382,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 485 */
+/* 488 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -70878,7 +71446,7 @@
 	exports.default = TabTemplate;
 
 /***/ },
-/* 486 */
+/* 489 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -70967,7 +71535,7 @@
 	exports.default = InkBar;
 
 /***/ },
-/* 487 */
+/* 490 */
 /***/ function(module, exports) {
 
 	module.exports = {
