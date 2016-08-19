@@ -68446,15 +68446,20 @@
 	            var uiVersion = result["@data"]["common"].ui_version;
 	            var adId = result["@data"]["common"].ad_id;
 	            if (sessionId != this.props.state.cids[index].sessionId) {
+	                console.log(cid, sessionId, sdkVersion, uiVersion, adId);
 	                this.props.updateRootCidDetails(index, "sessionId", sessionId);
+	                this.props.updateRootCidDetails(index, "uiVersion", "No information");
 	                this.props.updateRootCidDetails(index, "sdkVersion", sdkVersion);
-	                this.props.updateRootCidDetails(index, "uiVersion", uiVersion);
 	                this.props.updateRootCidDetails(index, "adId", adId);
 	                this.props.updateRootCidDetails(index, "logs", [result]);
 	            } else if (sessionId == this.props.state.cids[index].sessionId) {
 	                var logs = this.props.state.cids[index].logs;
 	                logs.push(result);
 	                this.props.updateRootCidDetails(index, "logs", logs);
+	                if (result["@data"]["@event_name"] == "intro") {
+	                    console.log(cid, sessionId, sdkVersion, uiVersion, adId);
+	                    this.props.updateRootCidDetails(index, "uiVersion", sdkVersion);
+	                }
 	            }
 	        }
 	    },
