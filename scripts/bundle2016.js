@@ -52,6 +52,10 @@
 
 	var _reactDom = __webpack_require__(35);
 
+	var _AppBar = __webpack_require__(593);
+
+	var _AppBar2 = _interopRequireDefault(_AppBar);
+
 	var _CidMenu = __webpack_require__(175);
 
 	var _CidMenu2 = _interopRequireDefault(_CidMenu);
@@ -133,7 +137,7 @@
 	                value: "Set url",
 	                primaryText: "Set url..."
 	            }],
-	            openManager: false,
+	            openEditName: false,
 	            openUrlInput: false
 	        };
 	    },
@@ -153,8 +157,11 @@
 	        obj[key] = value;
 	        this.setState(obj);
 	    },
-	    updateRootCidName: function updateRootCidName(index, name) {
+	    updateRootCidName: function updateRootCidName(cid, name) {
 	        var cids = this.state.cids;
+	        var index = _.findIndex(this.state.cids, function (item) {
+	            return item.cid == cid;
+	        }.bind(this));
 	        console.log("index:", index);
 	        cids[index].name = name;
 	        this.setState({ cids: cids });
@@ -182,67 +189,68 @@
 	    },
 	    displayMainPanel: function displayMainPanel() {
 	        var style = {
-	            div: {
+	            olddiv: {
 	                padding: '285px 0px'
 	            },
-	            inkBar: {
-	                background: '#1cfc98'
+	            div: {
+	                paddingLeft: '300px',
+	                paddingRight: '32px',
+	                paddingTop: '64px'
 	            },
-	            tab: {
-	                background: '#fc981c'
+	            appBar: {
+	                backgroundColor: '#fc981c',
+	                position: 'fixed',
+	                top: '0px'
+	            },
+	            title: {
+	                fontFamily: 'Roboto, sans-serif',
+	                fontWeight: '300',
+	                fontSize: '24px',
+	                color: '#ffffff',
+	                paddingLeft: '250px'
 	            }
 	        };
 	        var debugUrl = this.state.urlPrefix + "/aux/debug/M";
 	        if (this.state.activeCid) {
 	            return _react2.default.createElement(
-	                _index.Col,
-	                { xs: 12, md: 9 },
+	                'div',
+	                null,
+	                _react2.default.createElement(_AppBar2.default, { title: this.state.activeCid, titleStyle: style.title, iconClassNameRight: 'muidocs-icon-navigation-expand-more', zDepth: 0, style: style.appBar }),
 	                _react2.default.createElement(
-	                    _index.Row,
-	                    null,
+	                    'div',
+	                    { style: style.div },
 	                    _react2.default.createElement(
-	                        _index.Col,
-	                        { xs: 6, style: { padding: '20px' } },
-	                        _react2.default.createElement(_SettingForm2.default, { mapping: this.state.urlMapping, cid: this.state.activeCid, urlPrefix: this.state.urlPrefix })
+	                        _index.Row,
+	                        null,
+	                        _react2.default.createElement(
+	                            _index.Col,
+	                            { xs: 6, style: { padding: '20px' } },
+	                            _react2.default.createElement(_SettingForm2.default, { mapping: this.state.urlMapping, cid: this.state.activeCid, urlPrefix: this.state.urlPrefix })
+	                        ),
+	                        _react2.default.createElement(
+	                            _index.Col,
+	                            { xs: 6, style: { padding: '20px' } },
+	                            _react2.default.createElement(_EventPanel2.default, { cid: this.state.activeCid, url: debugUrl, pullInterval: 500 })
+	                        )
 	                    ),
-	                    _react2.default.createElement(
-	                        _index.Col,
-	                        { xs: 6, style: { padding: '20px' } },
-	                        _react2.default.createElement(_EventPanel2.default, { cid: this.state.activeCid, url: debugUrl, pullInterval: 500 })
-	                    )
-	                ),
-	                _react2.default.createElement(_Divider2.default, null),
-	                _react2.default.createElement(_LogPanel2.default, { state: this.state, pushCid: this.pushCid, updateRootState: this.updateRootState, updateRootCidDetails: this.updateRootCidDetails })
+	                    _react2.default.createElement(_Divider2.default, null),
+	                    _react2.default.createElement(_LogPanel2.default, { state: this.state, pushCid: this.pushCid, updateRootState: this.updateRootState, updateRootCidDetails: this.updateRootCidDetails })
+	                )
 	            );
 	        } else {
 	            return _react2.default.createElement(
-	                _index.Col,
-	                { xs: 12, md: 9 },
+	                'div',
+	                null,
+	                _react2.default.createElement(_AppBar2.default, { title: this.state.activeCid, titleStyle: style.title, iconClassNameRight: 'muidocs-icon-navigation-expand-more', zDepth: 0, style: style.appBar }),
 	                _react2.default.createElement(
-	                    _index.Row,
-	                    { center: 'xs' },
+	                    'div',
+	                    { style: style.div },
 	                    _react2.default.createElement(
-	                        _index.Col,
-	                        { xs: 9 },
-	                        _react2.default.createElement(
-	                            'div',
-	                            { style: style.div },
-	                            _react2.default.createElement(
-	                                'h1',
-	                                null,
-	                                'No active device being tested at this moment. Start testing to display dashboard.'
-	                            )
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    _index.Row,
-	                    null,
-	                    _react2.default.createElement(
-	                        _index.Col,
-	                        { xs: 12 },
-	                        _react2.default.createElement(_LogPanel2.default, { state: this.state, pushCid: this.pushCid, updateRootState: this.updateRootState, updateRootCidDetails: this.updateRootCidDetails })
-	                    )
+	                        'h1',
+	                        null,
+	                        'No active device being tested at this moment. Start testing to display dashboard.'
+	                    ),
+	                    _react2.default.createElement(_LogPanel2.default, { state: this.state, pushCid: this.pushCid, updateRootState: this.updateRootState, updateRootCidDetails: this.updateRootCidDetails })
 	                )
 	            );
 	        }
@@ -257,17 +265,9 @@
 	            _react2.default.createElement(
 	                'div',
 	                null,
-	                _react2.default.createElement(
-	                    _index.Row,
-	                    null,
-	                    _react2.default.createElement(
-	                        _index.Col,
-	                        { xs: 12, md: 3 },
-	                        _react2.default.createElement(_CidMenu2.default, { cids: this.state.cids, index: index, open: true, serverOptions: this.state.serverOptions, urlPrefix: this.state.urlPrefix, activeCid: this.state.activeCid, updateRootState: this.updateRootState })
-	                    ),
-	                    this.displayMainPanel()
-	                ),
-	                _react2.default.createElement(_DialogPanel2.default, { openManager: this.state.openManager, cids: this.state.cids, updateRootState: this.updateRootState, updateRootCidName: this.updateRootCidName }),
+	                _react2.default.createElement(_CidMenu2.default, { cids: this.state.cids, index: index, open: true, serverOptions: this.state.serverOptions, urlPrefix: this.state.urlPrefix, activeCid: this.state.activeCid, updateRootState: this.updateRootState }),
+	                this.displayMainPanel(),
+	                _react2.default.createElement(_DialogPanel2.default, { cid: this.state.activeCid, openEditName: this.state.openEditName, updateRootState: this.updateRootState, updateRootCidName: this.updateRootCidName }),
 	                _react2.default.createElement(_UrlDialog2.default, { openUrlInput: this.state.openUrlInput, serverOptions: this.state.serverOptions, updateRootState: this.updateRootState })
 	            )
 	        );
@@ -21692,6 +21692,14 @@
 
 	var _DropDownMenu2 = _interopRequireDefault(_DropDownMenu);
 
+	var _modeEdit = __webpack_require__(592);
+
+	var _modeEdit2 = _interopRequireDefault(_modeEdit);
+
+	var _IconButton = __webpack_require__(415);
+
+	var _IconButton2 = _interopRequireDefault(_IconButton);
+
 	var _List = __webpack_require__(423);
 
 	var _Menu = __webpack_require__(425);
@@ -21772,19 +21780,26 @@
 	        this.props.updateRootState("activeCid", listItem.props.value);
 	        console.log("listItem", listItem.props.value);
 	    },
+	    handleEditName: function handleEditName(cid, e) {
+	        e.stopPropagation();
+	        console.log(e.isPropagationStopped());
+	        this.props.updateRootState("openEditName", true);
+	    },
 	    render: function render() {
 	        var style = {
 	            active: {
 	                backgroundColor: '#cccccc',
 	                fontFamily: 'Roboto, sans-serif',
 	                cursor: 'pointer',
-	                width: '256px'
+	                width: '264px',
+	                paddingLeft: '52px'
 	            },
 	            normal: {
 	                backgroundColor: '#ffffff',
 	                fontFamily: 'Roboto, sans-serif',
 	                cursor: 'pointer',
-	                width: '256px'
+	                width: '264px',
+	                paddingLeft: '52px'
 	            },
 	            title: {
 	                fontFamily: 'Roboto, sans-serif',
@@ -21816,10 +21831,19 @@
 	            menuHeight: {
 	                height: '536px'
 	            },
+	            listWidth: {
+	                width: '264px'
+	            },
 	            label: {
 	                fontFamily: 'Roboto, sans-serif',
 	                fontWeight: '400',
 	                fontSize: '16px'
+	            },
+	            svg: {
+	                padding: "0px",
+	                margin: "0px",
+	                top: "10px",
+	                left: "12px"
 	            },
 	            logDetails: {
 	                fontSize: '14px',
@@ -21829,14 +21853,18 @@
 	        var cidNodes = this.props.cids.map(function (cid) {
 	            var displayCid = cid.cid.substring(0, 25) + "...";
 	            var activeCid = this.props.activeCid;
-	            return _react2.default.createElement(_List.ListItem, { onNestedListToggle: this.handleMenuToggle, primaryTogglesNestedList: true, nestedItems: [_react2.default.createElement(_List.ListItem, { primaryText: 'SDK Version', secondaryText: cid.sdkVersion, secondaryTextLines: 2, style: style.logDetails }), _react2.default.createElement(_List.ListItem, { primaryText: 'UI Version', secondaryText: cid.uiVersion, secondaryTextLines: 2, style: style.logDetails }), _react2.default.createElement(_List.ListItem, { primaryText: 'Ad Id', secondaryText: cid.adId, secondaryTextLines: 1, style: style.logDetails })], key: cid.id, value: cid.cid, primaryText: cid.name == '' ? displayCid : cid.name, innerDivStyle: this.props.activeCid == cid.cid ? style.active : style.normal, nestedListStyle: style.logDetails });
+	            return _react2.default.createElement(_List.ListItem, { leftIcon: _react2.default.createElement(
+	                    _IconButton2.default,
+	                    { onClick: this.handleEditName.bind(this, cid.cid), style: style.svg },
+	                    _react2.default.createElement(_modeEdit2.default, null)
+	                ), onNestedListToggle: this.handleMenuToggle, primaryTogglesNestedList: true, nestedItems: [_react2.default.createElement(_List.ListItem, { primaryText: 'SDK Version', secondaryText: cid.sdkVersion, secondaryTextLines: 2, style: style.logDetails }), _react2.default.createElement(_List.ListItem, { primaryText: 'UI Version', secondaryText: cid.uiVersion, secondaryTextLines: 2, style: style.logDetails }), _react2.default.createElement(_List.ListItem, { primaryText: 'Ad Id', secondaryText: cid.adId, secondaryTextLines: 1, style: style.logDetails })], key: cid.id, value: cid.cid, primaryText: cid.name == '' ? displayCid : cid.name, innerDivStyle: this.props.activeCid == cid.cid ? style.active : style.normal, nestedListStyle: style.logDetails });
 	        }.bind(this));
 	        var serverOptions = this.props.serverOptions.map(function (option) {
 	            return _react2.default.createElement(_MenuItem2.default, { key: option.id, value: option.value, primaryText: option.primaryText });
 	        });
 	        return _react2.default.createElement(
 	            _Drawer2.default,
-	            { open: this.props.open },
+	            { open: this.props.open, width: 256 },
 	            _react2.default.createElement(
 	                _Menu2.default,
 	                { style: style.header },
@@ -21859,10 +21887,10 @@
 	            _react2.default.createElement(_Divider2.default, null),
 	            _react2.default.createElement(
 	                'div',
-	                { style: style.menuHeight },
+	                null,
 	                _react2.default.createElement(
 	                    _SelectableList2.default,
-	                    { style: style.menuHeight, activeCid: this.props.activeCid, updateRootState: this.props.updateRootState },
+	                    { activeCid: this.props.activeCid, updateRootState: this.props.updateRootState },
 	                    cidNodes
 	                )
 	            )
@@ -40006,52 +40034,47 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	var ReactDOM = __webpack_require__(35);
+
 	var DialogPanel = _react2.default.createClass({
 	    displayName: 'DialogPanel',
 
+	    componentDidMount: function componentDidMount() {
+	        ReactDOM.findDOMNode(this.refs.nameInput).focus();
+	    },
 	    getInitialState: function getInitialState() {
 	        return {
-	            openEditPage: false,
-	            selectedRows: [],
 	            name: ''
 	        };
 	    },
 	    resetState: function resetState() {
 	        this.setState({
-	            openEditPage: false,
-	            selectedRows: [],
 	            name: ''
 	        });
+	        this.props.updateRootState("openEditName", false);
 	    },
-	    onRowSelection: function onRowSelection(selectedRows) {
+	    /*onRowSelection: function(selectedRows) {
 	        console.log(selectedRows);
 	        if (selectedRows.length > 0) {
 	            var row = selectedRows[0];
-	            this.setState({ name: this.props.cids[row].name });
+	            this.setState({name: this.props.cids[row].name});
 	        }
-	        this.setState({ selectedRows: selectedRows });
-	    },
-	    handleClose: function handleClose(e) {
-	        this.props.updateRootState("openManager", false);
-	        this.resetState();
-	    },
-	    handleEdit: function handleEdit() {
-	        this.setState({ openEditPage: true });
-	    },
+	        this.setState({selectedRows: selectedRows});
+	    },*/
 	    handleCloseEdit: function handleCloseEdit(e) {
 	        this.resetState();
 	    },
 	    handleSubmitName: function handleSubmitName(e) {
-	        this.setState({ openEditPage: false });
-	        this.props.updateRootCidName(this.state.selectedRows[0], this.state.name);
+	        e.preventDefault();
+	        e.stopPropagation();
+	        this.props.updateRootCidName(this.props.cid, this.state.name);
+	        this.resetState();
 	    },
 	    handleChangeName: function handleChangeName(e) {
 	        this.setState({ name: e.target.value });
 	    },
-	    displayTable: function displayTable() {
-	        var _this = this;
-
-	        var style = {
+	    /*displayTable: function() {
+	        const style = {
 	            noWidth: {
 	                width: '36px'
 	            },
@@ -40059,91 +40082,46 @@
 	                width: '150px'
 	            }
 	        };
-	        return _react2.default.createElement(
-	            _Table.Table,
-	            { height: '150px', fixedHeader: true, selectable: true, multiSelectable: false, onRowSelection: this.onRowSelection },
-	            _react2.default.createElement(
-	                _Table.TableHeader,
-	                { displaySelectAll: false, adjustForCheckbox: true, enableSelectAll: false },
-	                _react2.default.createElement(
-	                    _Table.TableRow,
-	                    null,
-	                    _react2.default.createElement(
-	                        _Table.TableHeaderColumn,
-	                        { style: style.noWidth },
-	                        'No.'
-	                    ),
-	                    _react2.default.createElement(
-	                        _Table.TableHeaderColumn,
-	                        { style: style.nameWidth, tooltip: 'Display name of the device' },
-	                        'Name'
-	                    ),
-	                    _react2.default.createElement(
-	                        _Table.TableHeaderColumn,
-	                        { tooltip: 'CID of the device' },
-	                        'CID'
-	                    ),
-	                    _react2.default.createElement(
-	                        _Table.TableHeaderColumn,
-	                        { tooltip: 'Details of the device' },
-	                        'Details'
-	                    )
-	                )
-	            ),
-	            _react2.default.createElement(
-	                _Table.TableBody,
-	                { displayRowCheckbox: true, deselectOnClickaway: false, showRowHover: true, stripedRows: false },
-	                this.props.cids.map(function (row, index) {
-	                    return _react2.default.createElement(
-	                        _Table.TableRow,
-	                        { key: index, selected: _this.state.selectedRows.indexOf(row.id) !== -1 },
-	                        _react2.default.createElement(
-	                            _Table.TableRowColumn,
-	                            { style: style.noWidth },
-	                            row.id
-	                        ),
-	                        _react2.default.createElement(
-	                            _Table.TableRowColumn,
-	                            { style: style.nameWidth },
-	                            row.name
-	                        ),
-	                        _react2.default.createElement(
-	                            _Table.TableRowColumn,
-	                            null,
-	                            row.cid
-	                        ),
-	                        _react2.default.createElement(
-	                            _Table.TableRowColumn,
-	                            null,
-	                            row.details
-	                        )
-	                    );
-	                })
-	            )
+	        return (
+	            <Table height="150px" fixedHeader={true} selectable={true} multiSelectable={false} onRowSelection={this.onRowSelection}>
+	                <TableHeader displaySelectAll={false} adjustForCheckbox={true} enableSelectAll={false}>
+	                    <TableRow>
+	                        <TableHeaderColumn style={style.noWidth}>No.</TableHeaderColumn>
+	                        <TableHeaderColumn style={style.nameWidth} tooltip="Display name of the device">Name</TableHeaderColumn>
+	                        <TableHeaderColumn tooltip="CID of the device">CID</TableHeaderColumn>
+	                        <TableHeaderColumn tooltip="Details of the device">Details</TableHeaderColumn>
+	                    </TableRow>
+	                </TableHeader>
+	                <TableBody displayRowCheckbox={true} deselectOnClickaway={false} showRowHover={true} stripedRows={false}>
+	                    {this.props.cids.map((row, index) => (
+	                        <TableRow key={index} selected={this.state.selectedRows.indexOf(row.id) !== -1}>
+	                            <TableRowColumn style={style.noWidth}>{row.id}</TableRowColumn>
+	                            <TableRowColumn style={style.nameWidth}>{row.name}</TableRowColumn>
+	                            <TableRowColumn>{row.cid}</TableRowColumn>
+	                            <TableRowColumn>{row.details}</TableRowColumn>
+	                        </TableRow>
+	                    ))}
+	                </TableBody>
+	            </Table>
 	        );
-	    },
+	    },*/
 	    render: function render() {
-	        var actions = [_react2.default.createElement(_FlatButton2.default, { label: 'Edit', primary: true, disabled: this.state.selectedRows.length == 0, onTouchTap: this.handleEdit }), _react2.default.createElement(_FlatButton2.default, { label: 'Done', primary: true, onTouchTap: this.handleClose })];
-	        var changeName = [_react2.default.createElement(_FlatButton2.default, { label: 'Submit', primary: true, onTouchTap: this.handleSubmitName }), _react2.default.createElement(_FlatButton2.default, { label: 'Cancel', primary: true, onTouchTap: this.handleCloseEdit })];
-	        var style = {
-	            firstDialog: {
-	                height: '400px'
-	            }
-	        };
-	        var row = 0;
-	        if (this.state.selectedRows.length > 0) {
-	            row = this.state.selectedRows[0];
-	        }
 	        return _react2.default.createElement(
 	            _Dialog2.default,
-	            { style: style.firstDialog, actions: actions, modal: false, open: this.props.openManager, onRequestClose: this.handleClose },
-	            this.displayTable(),
+	            { modal: false, open: this.props.openEditName, onRequestClose: this.handleCloseEdit },
 	            _react2.default.createElement(
-	                _Dialog2.default,
-	                { actions: changeName, modal: false, open: this.state.openEditPage, onRequestClose: this.handleCloseEdit },
-	                _react2.default.createElement(_TextField2.default, { hintText: 'Enter a new name', floatingLabelText: 'Name', value: this.state.name, onChange: this.handleChangeName })
+	                'form',
+	                null,
+	                _react2.default.createElement(_TextField2.default, { ref: function ref(input) {
+	                        if (input != null) {
+	                            input.focus();
+	                        }
+	                    }, hintText: 'Enter a new name', floatingLabelText: 'Name', value: this.state.name, onChange: this.handleChangeName }),
+	                _react2.default.createElement(_FlatButton2.default, { type: 'submit', label: 'Submit', primary: true, onClick: this.handleSubmitName }),
+	                _react2.default.createElement(_FlatButton2.default, { label: 'Cancel', primary: true, onTouchTap: this.handleCloseEdit })
 	            )
 	        );
+	        //ReactDOM.findDOMNode(this.refs.nameInput).focus();
 	    }
 	});
 
@@ -85204,6 +85182,466 @@
 			"url": "/v3/trial/set-next-video-frames-corrupted/:cid"
 		}
 	};
+
+/***/ },
+/* 592 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _pure = __webpack_require__(187);
+
+	var _pure2 = _interopRequireDefault(_pure);
+
+	var _SvgIcon = __webpack_require__(198);
+
+	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var EditorModeEdit = function EditorModeEdit(props) {
+	  return _react2.default.createElement(
+	    _SvgIcon2.default,
+	    props,
+	    _react2.default.createElement('path', { d: 'M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z' })
+	  );
+	};
+	EditorModeEdit = (0, _pure2.default)(EditorModeEdit);
+	EditorModeEdit.displayName = 'EditorModeEdit';
+	EditorModeEdit.muiName = 'SvgIcon';
+
+	exports.default = EditorModeEdit;
+
+/***/ },
+/* 593 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.default = undefined;
+
+	var _AppBar = __webpack_require__(594);
+
+	var _AppBar2 = _interopRequireDefault(_AppBar);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.default = _AppBar2.default;
+
+/***/ },
+/* 594 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	exports.getStyles = getStyles;
+
+	var _simpleAssign = __webpack_require__(200);
+
+	var _simpleAssign2 = _interopRequireDefault(_simpleAssign);
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _IconButton = __webpack_require__(415);
+
+	var _IconButton2 = _interopRequireDefault(_IconButton);
+
+	var _menu = __webpack_require__(595);
+
+	var _menu2 = _interopRequireDefault(_menu);
+
+	var _Paper = __webpack_require__(214);
+
+	var _Paper2 = _interopRequireDefault(_Paper);
+
+	var _propTypes = __webpack_require__(216);
+
+	var _propTypes2 = _interopRequireDefault(_propTypes);
+
+	var _warning = __webpack_require__(227);
+
+	var _warning2 = _interopRequireDefault(_warning);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	function getStyles(props, context) {
+	  var _context$muiTheme = context.muiTheme;
+	  var appBar = _context$muiTheme.appBar;
+	  var iconButtonSize = _context$muiTheme.button.iconButtonSize;
+	  var zIndex = _context$muiTheme.zIndex;
+
+
+	  var flatButtonSize = 36;
+
+	  var styles = {
+	    root: {
+	      position: 'relative',
+	      zIndex: zIndex.appBar,
+	      width: '100%',
+	      display: 'flex',
+	      backgroundColor: appBar.color,
+	      paddingLeft: appBar.padding,
+	      paddingRight: appBar.padding
+	    },
+	    title: {
+	      whiteSpace: 'nowrap',
+	      overflow: 'hidden',
+	      textOverflow: 'ellipsis',
+	      margin: 0,
+	      paddingTop: 0,
+	      letterSpacing: 0,
+	      fontSize: 24,
+	      fontWeight: appBar.titleFontWeight,
+	      color: appBar.textColor,
+	      height: appBar.height,
+	      lineHeight: appBar.height + 'px'
+	    },
+	    mainElement: {
+	      boxFlex: 1,
+	      flex: '1'
+	    },
+	    iconButtonStyle: {
+	      marginTop: (appBar.height - iconButtonSize) / 2,
+	      marginRight: 8,
+	      marginLeft: -16
+	    },
+	    iconButtonIconStyle: {
+	      fill: appBar.textColor,
+	      color: appBar.textColor
+	    },
+	    flatButton: {
+	      color: appBar.textColor,
+	      marginTop: (iconButtonSize - flatButtonSize) / 2 + 1
+	    }
+	  };
+
+	  return styles;
+	}
+
+	var AppBar = function (_Component) {
+	  _inherits(AppBar, _Component);
+
+	  function AppBar() {
+	    var _Object$getPrototypeO;
+
+	    var _temp, _this, _ret;
+
+	    _classCallCheck(this, AppBar);
+
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    return _ret = (_temp = (_this = _possibleConstructorReturn(this, (_Object$getPrototypeO = Object.getPrototypeOf(AppBar)).call.apply(_Object$getPrototypeO, [this].concat(args))), _this), _this.handleTouchTapLeftIconButton = function (event) {
+	      if (_this.props.onLeftIconButtonTouchTap) {
+	        _this.props.onLeftIconButtonTouchTap(event);
+	      }
+	    }, _this.handleTouchTapRightIconButton = function (event) {
+	      if (_this.props.onRightIconButtonTouchTap) {
+	        _this.props.onRightIconButtonTouchTap(event);
+	      }
+	    }, _this.handleTitleTouchTap = function (event) {
+	      if (_this.props.onTitleTouchTap) {
+	        _this.props.onTitleTouchTap(event);
+	      }
+	    }, _temp), _possibleConstructorReturn(_this, _ret);
+	  }
+
+	  _createClass(AppBar, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      process.env.NODE_ENV !== "production" ? (0, _warning2.default)(!this.props.iconElementLeft || !this.props.iconClassNameLeft, 'Properties iconElementLeft\n      and iconClassNameLeft cannot be simultaneously defined. Please use one or the other.') : void 0;
+
+	      process.env.NODE_ENV !== "production" ? (0, _warning2.default)(!this.props.iconElementRight || !this.props.iconClassNameRight, 'Properties iconElementRight\n      and iconClassNameRight cannot be simultaneously defined. Please use one or the other.') : void 0;
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      var _props = this.props;
+	      var title = _props.title;
+	      var titleStyle = _props.titleStyle;
+	      var iconStyleLeft = _props.iconStyleLeft;
+	      var iconStyleRight = _props.iconStyleRight;
+	      var onTitleTouchTap = _props.onTitleTouchTap;
+	      var showMenuIconButton = _props.showMenuIconButton;
+	      var iconElementLeft = _props.iconElementLeft;
+	      var iconElementRight = _props.iconElementRight;
+	      var iconClassNameLeft = _props.iconClassNameLeft;
+	      var iconClassNameRight = _props.iconClassNameRight;
+	      var onLeftIconButtonTouchTap = _props.onLeftIconButtonTouchTap;
+	      var className = _props.className;
+	      var style = _props.style;
+	      var zDepth = _props.zDepth;
+	      var children = _props.children;
+
+	      var other = _objectWithoutProperties(_props, ['title', 'titleStyle', 'iconStyleLeft', 'iconStyleRight', 'onTitleTouchTap', 'showMenuIconButton', 'iconElementLeft', 'iconElementRight', 'iconClassNameLeft', 'iconClassNameRight', 'onLeftIconButtonTouchTap', 'className', 'style', 'zDepth', 'children']);
+
+	      var prepareStyles = this.context.muiTheme.prepareStyles;
+
+	      var styles = getStyles(this.props, this.context);
+
+	      var menuElementLeft = void 0;
+	      var menuElementRight = void 0;
+
+	      // If the title is a string, wrap in an h1 tag.
+	      // If not, wrap in a div tag.
+	      var titleComponent = typeof title === 'string' || title instanceof String ? 'h1' : 'div';
+
+	      var titleElement = _react2.default.createElement(titleComponent, {
+	        onTouchTap: this.handleTitleTouchTap,
+	        style: prepareStyles((0, _simpleAssign2.default)(styles.title, styles.mainElement, titleStyle))
+	      }, title);
+
+	      var iconLeftStyle = (0, _simpleAssign2.default)({}, styles.iconButtonStyle, iconStyleLeft);
+
+	      if (showMenuIconButton) {
+	        var iconElementLeftNode = iconElementLeft;
+
+	        if (iconElementLeft) {
+	          if (iconElementLeft.type.muiName === 'IconButton') {
+	            var iconElemLeftChildren = iconElementLeft.props.children;
+	            var iconButtonIconStyle = !(iconElemLeftChildren && iconElemLeftChildren.props && iconElemLeftChildren.props.color) ? styles.iconButtonIconStyle : null;
+
+	            iconElementLeftNode = _react2.default.cloneElement(iconElementLeft, {
+	              iconStyle: (0, _simpleAssign2.default)({}, iconButtonIconStyle, iconElementLeft.props.iconStyle)
+	            });
+	          }
+
+	          menuElementLeft = _react2.default.createElement(
+	            'div',
+	            { style: prepareStyles(iconLeftStyle) },
+	            iconElementLeftNode
+	          );
+	        } else {
+	          var child = iconClassNameLeft ? '' : _react2.default.createElement(_menu2.default, { style: (0, _simpleAssign2.default)({}, styles.iconButtonIconStyle) });
+	          menuElementLeft = _react2.default.createElement(
+	            _IconButton2.default,
+	            {
+	              style: iconLeftStyle,
+	              iconStyle: styles.iconButtonIconStyle,
+	              iconClassName: iconClassNameLeft,
+	              onTouchTap: this.handleTouchTapLeftIconButton
+	            },
+	            child
+	          );
+	        }
+	      }
+
+	      var iconRightStyle = (0, _simpleAssign2.default)({}, styles.iconButtonStyle, {
+	        marginRight: -16,
+	        marginLeft: 'auto'
+	      }, iconStyleRight);
+
+	      if (iconElementRight) {
+	        var iconElementRightNode = iconElementRight;
+
+	        switch (iconElementRight.type.muiName) {
+	          case 'IconMenu':
+	          case 'IconButton':
+	            var iconElemRightChildren = iconElementRight.props.children;
+	            var _iconButtonIconStyle = !(iconElemRightChildren && iconElemRightChildren.props && iconElemRightChildren.props.color) ? styles.iconButtonIconStyle : null;
+
+	            iconElementRightNode = _react2.default.cloneElement(iconElementRight, {
+	              iconStyle: (0, _simpleAssign2.default)({}, _iconButtonIconStyle, iconElementRight.props.iconStyle)
+	            });
+	            break;
+
+	          case 'FlatButton':
+	            iconElementRightNode = _react2.default.cloneElement(iconElementRight, {
+	              style: (0, _simpleAssign2.default)({}, styles.flatButton, iconElementRight.props.style)
+	            });
+	            break;
+
+	          default:
+	        }
+
+	        menuElementRight = _react2.default.createElement(
+	          'div',
+	          { style: prepareStyles(iconRightStyle) },
+	          iconElementRightNode
+	        );
+	      } else if (iconClassNameRight) {
+	        menuElementRight = _react2.default.createElement(_IconButton2.default, {
+	          style: iconRightStyle,
+	          iconStyle: styles.iconButtonIconStyle,
+	          iconClassName: iconClassNameRight,
+	          onTouchTap: this.handleTouchTapRightIconButton
+	        });
+	      }
+
+	      return _react2.default.createElement(
+	        _Paper2.default,
+	        _extends({}, other, {
+	          rounded: false,
+	          className: className,
+	          style: (0, _simpleAssign2.default)({}, styles.root, style),
+	          zDepth: zDepth
+	        }),
+	        menuElementLeft,
+	        titleElement,
+	        menuElementRight,
+	        children
+	      );
+	    }
+	  }]);
+
+	  return AppBar;
+	}(_react.Component);
+
+	AppBar.muiName = 'AppBar';
+	AppBar.propTypes = {
+	  /**
+	   * Can be used to render a tab inside an app bar for instance.
+	   */
+	  children: _react.PropTypes.node,
+	  /**
+	   * Applied to the app bar's root element.
+	   */
+	  className: _react.PropTypes.string,
+	  /**
+	   * The classname of the icon on the left of the app bar.
+	   * If you are using a stylesheet for your icons, enter the class name for the icon to be used here.
+	   */
+	  iconClassNameLeft: _react.PropTypes.string,
+	  /**
+	   * Similiar to the iconClassNameLeft prop except that
+	   * it applies to the icon displayed on the right of the app bar.
+	   */
+	  iconClassNameRight: _react.PropTypes.string,
+	  /**
+	   * The custom element to be displayed on the left side of the
+	   * app bar such as an SvgIcon.
+	   */
+	  iconElementLeft: _react.PropTypes.element,
+	  /**
+	   * Similiar to the iconElementLeft prop except that this element is displayed on the right of the app bar.
+	   */
+	  iconElementRight: _react.PropTypes.element,
+	  /**
+	   * Override the inline-styles of the element displayed on the left side of the app bar.
+	   */
+	  iconStyleLeft: _react.PropTypes.object,
+	  /**
+	   * Override the inline-styles of the element displayed on the right side of the app bar.
+	   */
+	  iconStyleRight: _react.PropTypes.object,
+	  /**
+	   * Callback function for when the left icon is selected via a touch tap.
+	   *
+	   * @param {object} event TouchTap event targeting the left `IconButton`.
+	   */
+	  onLeftIconButtonTouchTap: _react.PropTypes.func,
+	  /**
+	   * Callback function for when the right icon is selected via a touch tap.
+	   *
+	   * @param {object} event TouchTap event targeting the right `IconButton`.
+	   */
+	  onRightIconButtonTouchTap: _react.PropTypes.func,
+	  /**
+	   * Callback function for when the title text is selected via a touch tap.
+	   *
+	   * @param {object} event TouchTap event targeting the `title` node.
+	   */
+	  onTitleTouchTap: _react.PropTypes.func,
+	  /**
+	   * Determines whether or not to display the Menu icon next to the title.
+	   * Setting this prop to false will hide the icon.
+	   */
+	  showMenuIconButton: _react.PropTypes.bool,
+	  /**
+	   * Override the inline-styles of the root element.
+	   */
+	  style: _react.PropTypes.object,
+	  /**
+	   * The title to display on the app bar.
+	   */
+	  title: _react.PropTypes.node,
+	  /**
+	   * Override the inline-styles of the app bar's title element.
+	   */
+	  titleStyle: _react.PropTypes.object,
+	  /**
+	   * The zDepth of the component.
+	   * The shadow of the app bar is also dependent on this property.
+	   */
+	  zDepth: _propTypes2.default.zDepth
+	};
+	AppBar.defaultProps = {
+	  showMenuIconButton: true,
+	  title: '',
+	  zDepth: 1
+	};
+	AppBar.contextTypes = {
+	  muiTheme: _react.PropTypes.object.isRequired
+	};
+	exports.default = AppBar;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
+
+/***/ },
+/* 595 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _pure = __webpack_require__(187);
+
+	var _pure2 = _interopRequireDefault(_pure);
+
+	var _SvgIcon = __webpack_require__(198);
+
+	var _SvgIcon2 = _interopRequireDefault(_SvgIcon);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var NavigationMenu = function NavigationMenu(props) {
+	  return _react2.default.createElement(
+	    _SvgIcon2.default,
+	    props,
+	    _react2.default.createElement('path', { d: 'M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z' })
+	  );
+	};
+	NavigationMenu = (0, _pure2.default)(NavigationMenu);
+	NavigationMenu.displayName = 'NavigationMenu';
+	NavigationMenu.muiName = 'SvgIcon';
+
+	exports.default = NavigationMenu;
 
 /***/ }
 /******/ ]);
