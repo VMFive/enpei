@@ -72,6 +72,10 @@
 
 	var _EventPanel2 = _interopRequireDefault(_EventPanel);
 
+	var _FlatButton = __webpack_require__(439);
+
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
+
 	var _LogPanel = __webpack_require__(468);
 
 	var _LogPanel2 = _interopRequireDefault(_LogPanel);
@@ -79,6 +83,14 @@
 	var _LogMenu = __webpack_require__(573);
 
 	var _LogMenu2 = _interopRequireDefault(_LogMenu);
+
+	var _RaisedButton = __webpack_require__(427);
+
+	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
+
+	var _RawDataDialog = __webpack_require__(596);
+
+	var _RawDataDialog2 = _interopRequireDefault(_RawDataDialog);
 
 	var _SettingForm = __webpack_require__(574);
 
@@ -133,7 +145,10 @@
 	                primaryText: "Set url..."
 	            }],
 	            openEditName: false,
-	            openUrlInput: false
+	            openUrlInput: false,
+	            openRawData: false,
+	            index: 0,
+	            row: 0
 	        };
 	    },
 	    updateRootState: function updateRootState(key, value) {
@@ -215,7 +230,7 @@
 	            return _react2.default.createElement(
 	                'div',
 	                null,
-	                _react2.default.createElement(_AppBar2.default, { title: this.state.cids[index].name.indexOf(substring) == -1 ? displayName : displayDetail, titleStyle: style.title, iconClassNameRight: 'muidocs-icon-navigation-expand-more', zDepth: 0, style: style.appBar }),
+	                _react2.default.createElement(_AppBar2.default, { title: this.state.cids[index].name.indexOf(substring) == -1 ? displayName : displayDetail, iconElementRight: _react2.default.createElement(_FlatButton2.default, { label: 'Go To Log', labelColor: '#ffffff' }), titleStyle: style.title, iconClassNameRight: 'muidocs-icon-navigation-expand-more', zDepth: 0, style: style.appBar }),
 	                _react2.default.createElement(
 	                    'div',
 	                    { style: style.div },
@@ -241,7 +256,7 @@
 	            return _react2.default.createElement(
 	                'div',
 	                null,
-	                _react2.default.createElement(_AppBar2.default, { title: this.state.activeCid, titleStyle: style.title, iconClassNameRight: 'muidocs-icon-navigation-expand-more', zDepth: 0, style: style.appBar }),
+	                _react2.default.createElement(_AppBar2.default, { title: this.state.activeCid, iconElementRight: _react2.default.createElement(_FlatButton2.default, { label: 'Go To Log', labelColor: '#ffffff' }), titleStyle: style.title, iconClassNameRight: 'muidocs-icon-navigation-expand-more', zDepth: 0, style: style.appBar }),
 	                _react2.default.createElement(
 	                    'div',
 	                    { style: style.div },
@@ -268,7 +283,8 @@
 	                _react2.default.createElement(_CidMenu2.default, { cids: this.state.cids, index: index, open: true, serverOptions: this.state.serverOptions, urlPrefix: this.state.urlPrefix, activeCid: this.state.activeCid, updateRootState: this.updateRootState }),
 	                this.displayMainPanel(),
 	                _react2.default.createElement(_DialogPanel2.default, { cid: this.state.activeCid, openEditName: this.state.openEditName, updateRootState: this.updateRootState, updateRootCidName: this.updateRootCidName }),
-	                _react2.default.createElement(_UrlDialog2.default, { openUrlInput: this.state.openUrlInput, serverOptions: this.state.serverOptions, updateRootState: this.updateRootState })
+	                _react2.default.createElement(_UrlDialog2.default, { openUrlInput: this.state.openUrlInput, serverOptions: this.state.serverOptions, updateRootState: this.updateRootState }),
+	                _react2.default.createElement(_RawDataDialog2.default, { openRawData: this.state.openRawData, cids: this.state.cids, index: this.state.index, row: this.state.row, updateRootState: this.updateRootState })
 	            )
 	        );
 	    }
@@ -68364,6 +68380,10 @@
 
 	var _Websocket2 = _interopRequireDefault(_Websocket);
 
+	var _RaisedButton = __webpack_require__(427);
+
+	var _RaisedButton2 = _interopRequireDefault(_RaisedButton);
+
 	var _Table = __webpack_require__(448);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -68405,11 +68425,11 @@
 	        if (result.ua.browser.name) {
 	            //name = result.ua.browser.name + " (" + cid.substring(0, 8) + ")";
 	            name = result.ua.browser.name + " (" + cid.substring(0, 8) + ")";
-	            details = result.ua.browser.name;
+	            details = result.ua.os.name + " " + result.ua.os.version + ", " + result.ua.browser.name;
 	        }
 	        if (result.ua.device.vendor) {
 	            name = result.ua.device.vendor + ", " + result.ua.browser.name + " (" + cid.substring(0, 8) + ")";
-	            details = result.ua.device.vendor + ", " + result.ua.device.model + ", " + result.ua.browser.name;
+	            details = result.ua.device.vendor + " " + result.ua.device.model + ", " + result.ua.os.name + " " + result.ua.os.version + ", " + result.ua.browser.name;
 	        }
 	        this.props.pushCid(cid, name, details, sessionId, sdkVersion, uiVersion, adId, logs);
 	        if (this.props.state.activeCid == '') {
@@ -68449,16 +68469,28 @@
 	            }
 	        }
 	    },
+	    onClickRaw: function onClickRaw(index, row, e) {
+	        var log = this.props.state.cids[index].logs[row];
+	        var time = moment(log["@data"]["@client_epoch_time"]).format("YYYY/MM/DD HH:mm:ss.SSS");
+	        this.props.updateRootState("openRawData", true);
+	        this.props.updateRootState("index", index);
+	        this.props.updateRootState("row", row);
+	        console.log(log);
+	    },
 	    displayTable: function displayTable() {
 	        var style = {
 	            timeWidth: {
-	                width: '240px'
+	                width: '200px'
 	            },
 	            typeWidth: {
 	                width: '150px'
 	            },
 	            nameWidth: {
-	                width: '300px'
+	                width: '240px'
+	            },
+	            buttonText: {
+	                textTransform: 'capitalize',
+	                color: "#ffffff"
 	            }
 	        };
 	        if (this.props.state.activeCid != '') {
@@ -68503,6 +68535,11 @@
 	                            _Table.TableHeaderColumn,
 	                            { tooltip: '@event_extra.fps' },
 	                            'Fps'
+	                        ),
+	                        _react2.default.createElement(
+	                            _Table.TableHeaderColumn,
+	                            { tooltip: 'Show raw data' },
+	                            'Raw'
 	                        )
 	                    )
 	                ),
@@ -68543,9 +68580,14 @@
 	                                _Table.TableRowColumn,
 	                                null,
 	                                log["@data"]["@event_extra"] ? log["@data"]["@event_extra"].fps : ""
+	                            ),
+	                            _react2.default.createElement(
+	                                _Table.TableRowColumn,
+	                                null,
+	                                _react2.default.createElement(_RaisedButton2.default, { label: 'Raw', onClick: this.onClickRaw.bind(this, index, key), backgroundColor: '#fc981c', labelStyle: style.buttonText })
 	                            )
 	                        );
-	                    })
+	                    }.bind(this))
 	                )
 	            );
 	        }
@@ -85653,6 +85695,58 @@
 	NavigationMenu.muiName = 'SvgIcon';
 
 	exports.default = NavigationMenu;
+
+/***/ },
+/* 596 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _reactDom = __webpack_require__(35);
+
+	var _Dialog = __webpack_require__(437);
+
+	var _Dialog2 = _interopRequireDefault(_Dialog);
+
+	var _FlatButton = __webpack_require__(439);
+
+	var _FlatButton2 = _interopRequireDefault(_FlatButton);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var ReactDOM = __webpack_require__(35);
+
+	var RawDataDialog = _react2.default.createClass({
+	    displayName: 'RawDataDialog',
+
+	    handleClose: function handleClose(e) {
+	        this.props.updateRootState("openRawData", false);
+	        this.props.updateRootState("index", 0);
+	        this.props.updateRootState("row", 0);
+	    },
+	    render: function render() {
+	        return _react2.default.createElement(
+	            _Dialog2.default,
+	            { modal: false, autoScrollBodyContent: true, open: this.props.openRawData, onRequestClose: this.handleClose },
+	            _react2.default.createElement(
+	                'pre',
+	                null,
+	                this.props.cids.length > 0 ? JSON.stringify(this.props.cids[this.props.index].logs[this.props.row], null, 4) : null
+	            )
+	        );
+	        //ReactDOM.findDOMNode(this.refs.nameInput).focus();
+	    }
+	});
+
+	exports.default = RawDataDialog;
 
 /***/ }
 /******/ ]);
