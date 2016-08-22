@@ -21792,14 +21792,16 @@
 	                fontFamily: 'Roboto, sans-serif',
 	                cursor: 'pointer',
 	                width: '264px',
-	                paddingLeft: '52px'
+	                paddingLeft: '52px',
+	                paddingRight: '40px'
 	            },
 	            normal: {
 	                backgroundColor: '#ffffff',
 	                fontFamily: 'Roboto, sans-serif',
 	                cursor: 'pointer',
 	                width: '264px',
-	                paddingLeft: '52px'
+	                paddingLeft: '52px',
+	                paddingRight: '40px'
 	            },
 	            title: {
 	                fontFamily: 'Roboto, sans-serif',
@@ -21819,9 +21821,6 @@
 	                fontWeight: '300',
 	                fontSize: '24px',
 	                color: '#ffffff'
-	            },
-	            managerButton: {
-	                margin: '6px 12px'
 	            },
 	            buttonTextActive: {
 	                display: 'inline-block',
@@ -55874,13 +55873,17 @@
 	            section: {
 	                marginTop: '12px',
 	                padding: '16px',
-	                minHeight: '182px'
+	                height: '200px'
 	            },
 	            title: {
 	                fontFamily: 'Roboto, sans-serif',
 	                fontWeight: '400',
 	                fontSize: '28px',
 	                marginTop: '10px'
+	            },
+	            scrollable: {
+	                height: '100px',
+	                overflow: 'scroll'
 	            }
 	        };
 	        _.forEach(debugStatus, function (value, key) {
@@ -55906,9 +55909,13 @@
 	            ),
 	            _react2.default.createElement(_Divider2.default, { style: style.shortLine }),
 	            _react2.default.createElement(
-	                'ul',
-	                null,
-	                settings
+	                'div',
+	                { style: style.scrollable },
+	                _react2.default.createElement(
+	                    'ul',
+	                    null,
+	                    settings
+	                )
 	            )
 	        );
 	    }
