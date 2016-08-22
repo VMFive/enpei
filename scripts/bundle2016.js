@@ -100,10 +100,6 @@
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _urlMapping = __webpack_require__(591);
-
-	var _urlMapping2 = _interopRequireDefault(_urlMapping);
-
 	var _index = __webpack_require__(176);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -122,7 +118,6 @@
 	        return {
 	            cids: [],
 	            activeCid: '',
-	            urlMapping: [],
 	            urlPrefix: 'http://campaign.vm5apis.com',
 	            serverOptions: [{
 	                id: 0,
@@ -140,9 +135,6 @@
 	            openEditName: false,
 	            openUrlInput: false
 	        };
-	    },
-	    componentDidMount: function componentDidMount() {
-	        this.setState({ urlMapping: _urlMapping2.default });
 	    },
 	    updateRootState: function updateRootState(key, value) {
 	        var obj = {};
@@ -186,6 +178,7 @@
 	        obj.logs = logs;
 	        array.push(obj);
 	        this.setState({ cids: array });
+	        console.log(obj);
 	    },
 	    displayMainPanel: function displayMainPanel() {
 	        var style = {
@@ -212,10 +205,17 @@
 	        };
 	        var debugUrl = this.state.urlPrefix + "/aux/debug/M";
 	        if (this.state.activeCid) {
+	            var index = _.findIndex(this.state.cids, function (item) {
+	                return item.cid == this.state.activeCid;
+	            }.bind(this));
+	            var displayDetail = this.state.cids[index].details + ': ' + this.state.activeCid;
+	            var displayName = this.state.cids[index].name + ' (' + this.state.cids[index].details + '): ' + this.state.activeCid;;
+	            var substring = this.state.activeCid.substring(0, 8);
+	            //"Model: " + this.state.cids[index].details + ', Cid: ' + this.state.activeCid
 	            return _react2.default.createElement(
 	                'div',
 	                null,
-	                _react2.default.createElement(_AppBar2.default, { title: this.state.activeCid, titleStyle: style.title, iconClassNameRight: 'muidocs-icon-navigation-expand-more', zDepth: 0, style: style.appBar }),
+	                _react2.default.createElement(_AppBar2.default, { title: this.state.cids[index].name.indexOf(substring) == -1 ? displayName : displayDetail, titleStyle: style.title, iconClassNameRight: 'muidocs-icon-navigation-expand-more', zDepth: 0, style: style.appBar }),
 	                _react2.default.createElement(
 	                    'div',
 	                    { style: style.div },
@@ -225,7 +225,7 @@
 	                        _react2.default.createElement(
 	                            _index.Col,
 	                            { xs: 6, style: { padding: '20px' } },
-	                            _react2.default.createElement(_SettingForm2.default, { mapping: this.state.urlMapping, cid: this.state.activeCid, urlPrefix: this.state.urlPrefix })
+	                            _react2.default.createElement(_SettingForm2.default, { cid: this.state.activeCid, urlPrefix: this.state.urlPrefix })
 	                        ),
 	                        _react2.default.createElement(
 	                            _index.Col,
@@ -55874,7 +55874,7 @@
 	            section: {
 	                marginTop: '12px',
 	                padding: '16px',
-	                height: '182px'
+	                minHeight: '182px'
 	            },
 	            title: {
 	                fontFamily: 'Roboto, sans-serif',
@@ -68396,6 +68396,7 @@
 	        var adId = result["@data"]["common"].ad_id;
 	        var logs = [result];
 	        if (result.ua.browser.name) {
+	            //name = result.ua.browser.name + " (" + cid.substring(0, 8) + ")";
 	            name = result.ua.browser.name + " (" + cid.substring(0, 8) + ")";
 	            details = result.ua.browser.name;
 	        }
@@ -82915,6 +82916,10 @@
 
 	var _index = __webpack_require__(176);
 
+	var _urlMapping = __webpack_require__(591);
+
+	var _urlMapping2 = _interopRequireDefault(_urlMapping);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var _ = __webpack_require__(466);
@@ -82945,6 +82950,7 @@
 	    },
 	    componentDidMount: function componentDidMount() {
 	        this.loadDebugTime();
+	        //this.setState({urlMapping: urlMapping});
 	    },
 	    /*componentWillReceiveProps: function(props) {
 	        this.setState({
@@ -82974,7 +82980,6 @@
 	            vmNotYours: false,
 	            imgCorrupts: 'Not set',
 	            videoCorrupts: false,
-	            mapping: [],
 	            debugTimeLimit: ''
 	        };
 	    },
@@ -82991,7 +82996,6 @@
 	            imgCorrupts: 'Not set',
 	            videoCorrupts: false,
 	            preRecordedVideo: false,
-	            mapping: [],
 	            debugTimeLimit: ''
 	        });
 	    },
@@ -83034,12 +83038,12 @@
 	    prepareAndSendRequest: function prepareAndSendRequest() {
 	        var stateObj = this.state;
 	        var cid = this.props.cid;
-	        var mapping = this.props.mapping;
+	        console.log(stateObj);
 	        _.forEach(stateObj, function (value, key) {
-	            if (key in mapping && value && value != "Not set") {
+	            if (key in _urlMapping2.default && value && value != "Not set") {
 	                //only look at attributes that are set
 	                var url = '';
-	                var subObj = mapping[key]; //there are "type" and "url" in subObj
+	                var subObj = _urlMapping2.default[key]; //there are "type" and "url" in subObj
 	                url = subObj.url;
 	                if (subObj.type == "select" && typeof url[value] != 'undefined') {
 	                    url = url[value];
