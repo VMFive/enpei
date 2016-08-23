@@ -147,8 +147,7 @@
 	            openEditName: false,
 	            openUrlInput: false,
 	            openRawData: false,
-	            index: 0,
-	            row: 0
+	            log: {}
 	        };
 	    },
 	    updateRootState: function updateRootState(key, value) {
@@ -173,7 +172,7 @@
 	        cids[index].name = name;
 	        this.setState({ cids: cids });
 	    },
-	    pushCid: function pushCid(cid, name, details, sessionId, sdkVersion, uiVersion, adId, logs) {
+	    pushCid: function pushCid(cid, name, details, sessionId, sdkVersion, uiVersion, adId) {
 	        var array = this.state.cids;
 	        var obj = {};
 	        obj.id = array.length;
@@ -190,7 +189,7 @@
 	        }
 	        obj.uiVersion = uiVersion;
 	        obj.adId = adId;
-	        obj.logs = logs;
+	        //obj.logs = logs;
 	        array.push(obj);
 	        this.setState({ cids: array });
 	        console.log(obj);
@@ -248,8 +247,7 @@
 	                            _react2.default.createElement(_EventPanel2.default, { cid: this.state.activeCid, url: debugUrl, pullInterval: 500 })
 	                        )
 	                    ),
-	                    _react2.default.createElement(_Divider2.default, null),
-	                    _react2.default.createElement(_LogPanel2.default, { state: this.state, pushCid: this.pushCid, updateRootState: this.updateRootState, updateRootCidDetails: this.updateRootCidDetails })
+	                    _react2.default.createElement(_Divider2.default, null)
 	                )
 	            );
 	        } else {
@@ -264,8 +262,7 @@
 	                        'h1',
 	                        null,
 	                        'No active device being tested at this moment. Start testing to display dashboard.'
-	                    ),
-	                    _react2.default.createElement(_LogPanel2.default, { state: this.state, pushCid: this.pushCid, updateRootState: this.updateRootState, updateRootCidDetails: this.updateRootCidDetails })
+	                    )
 	                )
 	            );
 	        }
@@ -282,9 +279,10 @@
 	                null,
 	                _react2.default.createElement(_CidMenu2.default, { cids: this.state.cids, index: index, open: true, serverOptions: this.state.serverOptions, urlPrefix: this.state.urlPrefix, activeCid: this.state.activeCid, updateRootState: this.updateRootState }),
 	                this.displayMainPanel(),
+	                _react2.default.createElement(_LogPanel2.default, { state: this.state, pushCid: this.pushCid, updateRootState: this.updateRootState, updateRootCidDetails: this.updateRootCidDetails }),
 	                _react2.default.createElement(_DialogPanel2.default, { cid: this.state.activeCid, openEditName: this.state.openEditName, updateRootState: this.updateRootState, updateRootCidName: this.updateRootCidName }),
 	                _react2.default.createElement(_UrlDialog2.default, { openUrlInput: this.state.openUrlInput, serverOptions: this.state.serverOptions, updateRootState: this.updateRootState }),
-	                _react2.default.createElement(_RawDataDialog2.default, { openRawData: this.state.openRawData, cids: this.state.cids, index: this.state.index, row: this.state.row, updateRootState: this.updateRootState })
+	                _react2.default.createElement(_RawDataDialog2.default, { openRawData: this.state.openRawData, updateRootState: this.updateRootState, log: this.state.log })
 	            )
 	        );
 	    }
@@ -21746,33 +21744,6 @@
 
 	(0, _reactTapEventPlugin2.default)();
 
-	/*let SelectableList = MakeSelectable(List);
-	function wrapState(ComposedComponent) {
-	  return class SelectableList extends Component {
-	    componentWillMount() {
-	      this.setState({
-	        selectedIndex: this.props.defaultValue,
-	      });
-	    };
-
-	    handleRequestChange(event, index) {
-	      this.setState({
-	        selectedIndex: index,
-	      }).bind(this);
-	    };
-
-	    render() {
-	      return (
-	        <ComposedComponent value={this.state.selectedIndex} onChange={this.handleRequestChange}>
-	          {this.props.children}
-	        </ComposedComponent>
-	      );
-	    }
-	  };
-	}
-
-	SelectableList = wrapState(SelectableList);*/
-
 	var CidMenu = _react2.default.createClass({
 	    displayName: 'CidMenu',
 
@@ -40068,14 +40039,6 @@
 	        });
 	        this.props.updateRootState("openEditName", false);
 	    },
-	    /*onRowSelection: function(selectedRows) {
-	        console.log(selectedRows);
-	        if (selectedRows.length > 0) {
-	            var row = selectedRows[0];
-	            this.setState({name: this.props.cids[row].name});
-	        }
-	        this.setState({selectedRows: selectedRows});
-	    },*/
 	    handleCloseEdit: function handleCloseEdit(e) {
 	        this.resetState();
 	    },
@@ -40088,38 +40051,6 @@
 	    handleChangeName: function handleChangeName(e) {
 	        this.setState({ name: e.target.value });
 	    },
-	    /*displayTable: function() {
-	        const style = {
-	            noWidth: {
-	                width: '36px'
-	            },
-	            nameWidth: {
-	                width: '150px'
-	            }
-	        };
-	        return (
-	            <Table height="150px" fixedHeader={true} selectable={true} multiSelectable={false} onRowSelection={this.onRowSelection}>
-	                <TableHeader displaySelectAll={false} adjustForCheckbox={true} enableSelectAll={false}>
-	                    <TableRow>
-	                        <TableHeaderColumn style={style.noWidth}>No.</TableHeaderColumn>
-	                        <TableHeaderColumn style={style.nameWidth} tooltip="Display name of the device">Name</TableHeaderColumn>
-	                        <TableHeaderColumn tooltip="CID of the device">CID</TableHeaderColumn>
-	                        <TableHeaderColumn tooltip="Details of the device">Details</TableHeaderColumn>
-	                    </TableRow>
-	                </TableHeader>
-	                <TableBody displayRowCheckbox={true} deselectOnClickaway={false} showRowHover={true} stripedRows={false}>
-	                    {this.props.cids.map((row, index) => (
-	                        <TableRow key={index} selected={this.state.selectedRows.indexOf(row.id) !== -1}>
-	                            <TableRowColumn style={style.noWidth}>{row.id}</TableRowColumn>
-	                            <TableRowColumn style={style.nameWidth}>{row.name}</TableRowColumn>
-	                            <TableRowColumn>{row.cid}</TableRowColumn>
-	                            <TableRowColumn>{row.details}</TableRowColumn>
-	                        </TableRow>
-	                    ))}
-	                </TableBody>
-	            </Table>
-	        );
-	    },*/
 	    render: function render() {
 	        return _react2.default.createElement(
 	            _Dialog2.default,
@@ -55870,8 +55801,6 @@
 	        var debugStatus = this.props.data.v4;
 	        if (this.props.data.v3) {
 	            debugStatus.onetimeTokenStatusCodeCids = this.props.data.v3.onetimeTokenStatusCodeCids;
-	            debugStatus.corruptedVideoCids = this.props.data.v3.corruptedVideoCids;
-	            debugStatus.preRecordedCids = this.props.data.v3.preRecordedCids;
 	        }
 	        var mapping = this.props.mapping;
 	        var cid = this.props.cid;
@@ -68357,6 +68286,14 @@
 		"corruptedVideoCids": {
 			"display": "Video Corrupts",
 			"textinput": false
+		},
+		"corruptedProtobufCids": {
+			"display": "Protocol Buffer Corrupts",
+			"textinput": false
+		},
+		"wsConnectionRefusedCids": {
+			"display": "Connection Refused",
+			"textinput": false
 		}
 	};
 
@@ -68395,14 +68332,13 @@
 
 	    getInitialState: function getInitialState() {
 	        return {
-	            logs: [],
-	            nowCid: '',
+	            cidLogPairs: {},
 	            sessionId: '',
 	            timer: null
 	        };
 	    },
 	    componentDidMount: function componentDidMount() {
-	        console.log("mount!");
+	        //console.log("mount!");
 	        //alert("mount!");
 	    },
 	    handleOpen: function handleOpen(ws) {
@@ -68414,6 +68350,11 @@
 	    handleClose: function handleClose() {
 	        clearInterval(this.state.timer);
 	    },
+	    updateCidLogPair: function updateCidLogPair(cid, logs) {
+	        var obj = this.state.cidLogPairs;
+	        obj[cid] = logs;
+	        this.setState({ cidLogPairs: obj });
+	    },
 	    addNewCid: function addNewCid(result, cid, index) {
 	        var name = result.ua.ua.substring(0, 11) + " (" + cid.substring(0, 8) + ")";
 	        var details = result.ua.ua;
@@ -68422,6 +68363,7 @@
 	        var uiVersion = result["@data"]["common"].ui_version;
 	        var adId = result["@data"]["common"].ad_id;
 	        var logs = [result];
+	        this.updateCidLogPair(cid, logs);
 	        if (result.ua.browser.name) {
 	            //name = result.ua.browser.name + " (" + cid.substring(0, 8) + ")";
 	            name = result.ua.browser.name + " (" + cid.substring(0, 8) + ")";
@@ -68431,7 +68373,7 @@
 	            name = result.ua.device.vendor + ", " + result.ua.browser.name + " (" + cid.substring(0, 8) + ")";
 	            details = result.ua.device.vendor + " " + result.ua.device.model + ", " + result.ua.os.name + " " + result.ua.os.version + ", " + result.ua.browser.name;
 	        }
-	        this.props.pushCid(cid, name, details, sessionId, sdkVersion, uiVersion, adId, logs);
+	        this.props.pushCid(cid, name, details, sessionId, sdkVersion, uiVersion, adId);
 	        if (this.props.state.activeCid == '') {
 	            this.props.updateRootState("activeCid", cid);
 	        }
@@ -68452,30 +68394,30 @@
 	            var uiVersion = result["@data"]["common"].ui_version;
 	            var adId = result["@data"]["common"].ad_id;
 	            if (sessionId != this.props.state.cids[index].sessionId) {
-	                console.log(cid, sessionId, sdkVersion, uiVersion, adId);
 	                this.props.updateRootCidDetails(index, "sessionId", sessionId);
 	                this.props.updateRootCidDetails(index, "uiVersion", "No information");
 	                this.props.updateRootCidDetails(index, "sdkVersion", sdkVersion);
 	                this.props.updateRootCidDetails(index, "adId", adId);
-	                this.props.updateRootCidDetails(index, "logs", [result]);
+	                //this.props.updateRootCidDetails(index, "logs", [result]);
+	                this.updateCidLogPair(cid, [result]);
 	            } else if (sessionId == this.props.state.cids[index].sessionId) {
-	                var logs = this.props.state.cids[index].logs;
+	                //var logs = this.props.state.cids[index].logs;
+	                var logs = this.state.cidLogPairs[cid];
 	                logs.push(result);
-	                this.props.updateRootCidDetails(index, "logs", logs);
+	                //this.props.updateRootCidDetails(index, "logs", logs);
+	                this.updateCidLogPair(cid, logs);
 	                if (result["@data"]["@event_name"] == "intro") {
-	                    console.log(cid, sessionId, sdkVersion, uiVersion, adId);
 	                    this.props.updateRootCidDetails(index, "uiVersion", sdkVersion);
 	                }
 	            }
 	        }
 	    },
-	    onClickRaw: function onClickRaw(index, row, e) {
-	        var log = this.props.state.cids[index].logs[row];
+	    onClickRaw: function onClickRaw(row, e) {
+	        //var log = this.props.state.cids[index].logs[row];
 	        var time = moment(log["@data"]["@client_epoch_time"]).format("YYYY/MM/DD HH:mm:ss.SSS");
 	        this.props.updateRootState("openRawData", true);
-	        this.props.updateRootState("index", index);
-	        this.props.updateRootState("row", row);
-	        console.log(log);
+	        this.props.updateRootState("log", this.state.cidLogPairs[this.props.activeCid][row]);
+	        //console.log(log);
 	    },
 	    displayTable: function displayTable() {
 	        var style = {
@@ -68491,113 +68433,114 @@
 	            buttonText: {
 	                textTransform: 'capitalize',
 	                color: "#ffffff"
+	            },
+	            div: {
+	                paddingLeft: '300px',
+	                paddingRight: '32px'
 	            }
 	        };
 	        if (this.props.state.activeCid != '') {
-	            var index = _.findIndex(this.props.state.cids, function (item) {
-	                return item.cid == this.props.state.activeCid;
-	            }.bind(this));
+	            //console.log("rendering display table", this.state.cidLogPairs, this.props.state.activeCid);
 	            return _react2.default.createElement(
-	                _Table.Table,
-	                { height: '584px', fixedHeader: true, selectable: false },
+	                'div',
+	                { style: style.div },
 	                _react2.default.createElement(
-	                    _Table.TableHeader,
-	                    { displaySelectAll: false, adjustForCheckbox: false, enableSelectAll: false },
+	                    _Table.Table,
+	                    { height: '584px', fixedHeader: true, selectable: false },
 	                    _react2.default.createElement(
-	                        _Table.TableRow,
-	                        null,
+	                        _Table.TableHeader,
+	                        { displaySelectAll: false, adjustForCheckbox: false, enableSelectAll: false },
 	                        _react2.default.createElement(
-	                            _Table.TableHeaderColumn,
-	                            { style: style.timeWidth, tooltip: '@client_epoch_time' },
-	                            'Client Time'
-	                        ),
-	                        _react2.default.createElement(
-	                            _Table.TableHeaderColumn,
-	                            { style: style.typeWidth, tooltip: '@event_type' },
-	                            'Event Type'
-	                        ),
-	                        _react2.default.createElement(
-	                            _Table.TableHeaderColumn,
-	                            { style: style.nameWidth, tooltip: '@event_name' },
-	                            'Event Name'
-	                        ),
-	                        _react2.default.createElement(
-	                            _Table.TableHeaderColumn,
-	                            { tooltip: '@event_extra.score' },
-	                            'Score'
-	                        ),
-	                        _react2.default.createElement(
-	                            _Table.TableHeaderColumn,
-	                            { tooltip: '@event_extra.sec' },
-	                            'Second'
-	                        ),
-	                        _react2.default.createElement(
-	                            _Table.TableHeaderColumn,
-	                            { tooltip: '@event_extra.fps' },
-	                            'Fps'
-	                        ),
-	                        _react2.default.createElement(
-	                            _Table.TableHeaderColumn,
-	                            { tooltip: 'Show raw data' },
-	                            'Raw'
-	                        )
-	                    )
-	                ),
-	                _react2.default.createElement(
-	                    _Table.TableBody,
-	                    { displayRowCheckbox: false, showRowHover: true, stripedRows: false },
-	                    this.props.state.cids[index].logs.map(function (log, key) {
-	                        var time = moment(log["@data"]["@client_epoch_time"]).format("YYYY/MM/DD HH:mm:ss.SSS");
-	                        return _react2.default.createElement(
 	                            _Table.TableRow,
-	                            { key: key },
+	                            null,
 	                            _react2.default.createElement(
-	                                _Table.TableRowColumn,
-	                                { style: style.timeWidth },
-	                                time
+	                                _Table.TableHeaderColumn,
+	                                { style: style.timeWidth, tooltip: '@client_epoch_time' },
+	                                'Client Time'
 	                            ),
 	                            _react2.default.createElement(
-	                                _Table.TableRowColumn,
-	                                { style: style.typeWidth },
-	                                log["@data"]["@event_type"]
+	                                _Table.TableHeaderColumn,
+	                                { style: style.typeWidth, tooltip: '@event_type' },
+	                                'Event Type'
 	                            ),
 	                            _react2.default.createElement(
-	                                _Table.TableRowColumn,
-	                                { style: style.nameWidth },
-	                                log["@data"]["@event_name"]
+	                                _Table.TableHeaderColumn,
+	                                { style: style.nameWidth, tooltip: '@event_name' },
+	                                'Event Name'
 	                            ),
 	                            _react2.default.createElement(
-	                                _Table.TableRowColumn,
-	                                null,
-	                                log["@data"]["@event_extra"] ? log["@data"]["@event_extra"].score : ""
+	                                _Table.TableHeaderColumn,
+	                                { tooltip: '@event_extra.score' },
+	                                'Score'
 	                            ),
 	                            _react2.default.createElement(
-	                                _Table.TableRowColumn,
-	                                null,
-	                                log["@data"]["@event_extra"] ? log["@data"]["@event_extra"].sec : ""
+	                                _Table.TableHeaderColumn,
+	                                { tooltip: '@event_extra.sec' },
+	                                'Second'
 	                            ),
 	                            _react2.default.createElement(
-	                                _Table.TableRowColumn,
-	                                null,
-	                                log["@data"]["@event_extra"] ? log["@data"]["@event_extra"].fps : ""
+	                                _Table.TableHeaderColumn,
+	                                { tooltip: '@event_extra.fps' },
+	                                'Fps'
 	                            ),
 	                            _react2.default.createElement(
-	                                _Table.TableRowColumn,
-	                                null,
-	                                _react2.default.createElement(_RaisedButton2.default, { label: 'Raw', onClick: this.onClickRaw.bind(this, index, key), backgroundColor: '#fc981c', labelStyle: style.buttonText })
+	                                _Table.TableHeaderColumn,
+	                                { tooltip: 'Show raw data' },
+	                                'Raw'
 	                            )
-	                        );
-	                    }.bind(this))
+	                        )
+	                    ),
+	                    _react2.default.createElement(
+	                        _Table.TableBody,
+	                        { displayRowCheckbox: false, showRowHover: true, stripedRows: false },
+	                        this.state.cidLogPairs[this.props.state.activeCid].map(function (log, key) {
+	                            var time = moment(log["@data"]["@client_epoch_time"]).format("YYYY/MM/DD HH:mm:ss.SSS");
+	                            return _react2.default.createElement(
+	                                _Table.TableRow,
+	                                { key: key },
+	                                _react2.default.createElement(
+	                                    _Table.TableRowColumn,
+	                                    { style: style.timeWidth },
+	                                    time
+	                                ),
+	                                _react2.default.createElement(
+	                                    _Table.TableRowColumn,
+	                                    { style: style.typeWidth },
+	                                    log["@data"]["@event_type"]
+	                                ),
+	                                _react2.default.createElement(
+	                                    _Table.TableRowColumn,
+	                                    { style: style.nameWidth },
+	                                    log["@data"]["@event_name"]
+	                                ),
+	                                _react2.default.createElement(
+	                                    _Table.TableRowColumn,
+	                                    null,
+	                                    log["@data"]["@event_extra"] ? log["@data"]["@event_extra"].score : ""
+	                                ),
+	                                _react2.default.createElement(
+	                                    _Table.TableRowColumn,
+	                                    null,
+	                                    log["@data"]["@event_extra"] ? log["@data"]["@event_extra"].sec : ""
+	                                ),
+	                                _react2.default.createElement(
+	                                    _Table.TableRowColumn,
+	                                    null,
+	                                    log["@data"]["@event_extra"] ? log["@data"]["@event_extra"].fps : ""
+	                                ),
+	                                _react2.default.createElement(
+	                                    _Table.TableRowColumn,
+	                                    null,
+	                                    _react2.default.createElement(_RaisedButton2.default, { label: 'Raw', onClick: this.onClickRaw.bind(this, key), backgroundColor: '#fc981c', labelStyle: style.buttonText })
+	                                )
+	                            );
+	                        }.bind(this))
+	                    )
 	                )
 	            );
 	        }
 	    },
 	    render: function render() {
-	        /*if (this.props.state.activeCid != this.state.nowCid) {
-	            this.setState({logs: []});
-	            this.setState({nowCid: this.props.state.activeCid});
-	            this.setState({sessionId: ''});
-	        }*/
 	        return _react2.default.createElement(
 	            'div',
 	            null,
@@ -83028,6 +82971,7 @@
 	            campaignExpired: 'Not set',
 	            vmNotYours: false,
 	            imgCorrupts: 'Not set',
+	            bufferCorrupts: false,
 	            videoCorrupts: false,
 	            debugTimeLimit: ''
 	        };
@@ -83043,6 +82987,7 @@
 	            campaignExpired: 'Not set',
 	            vmNotYours: false,
 	            imgCorrupts: 'Not set',
+	            bufferCorrupts: false,
 	            videoCorrupts: false,
 	            preRecordedVideo: false,
 	            debugTimeLimit: ''
@@ -83055,7 +83000,7 @@
 	            case 2:
 	                return _react2.default.createElement(_SettingPageTwo2.default, { state: this.state, updateState: this.updateState, onChangeChecked: this.onChangeChecked, noVmOptions: noVmOptions, corruptedImageOptions: corruptedImageOptions });
 	            case 3:
-	                return _react2.default.createElement(_SettingPageThree2.default, { cid: this.props.cid, urlPrefix: this.props.urlPrefix, debugTimeLimit: this.state.debugTimeLimit });
+	                return _react2.default.createElement(_SettingPageThree2.default, { cid: this.props.cid, urlPrefix: this.props.urlPrefix, debugTimeLimit: this.state.debugTimeLimit, handleReset: this.handleReset });
 	        }
 	    },
 	    updateState: function updateState(id, value) {
@@ -84219,6 +84164,8 @@
 	                        ),
 	                        _react2.default.createElement(_Divider2.default, { style: style.shortLine }),
 	                        _react2.default.createElement(_FormRadioButtons2.default, { order: '1', label: 'Image Corrupts', id: 'imgCorrupts', state: this.props.state, options: this.props.corruptedImageOptions, updateState: this.props.updateState }),
+	                        _react2.default.createElement(_Divider2.default, { style: style.longLine }),
+	                        _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'Protocol Buffer Corrupts', id: 'bufferCorrupts', state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
 	                        _react2.default.createElement(_Divider2.default, { style: style.longLine })
 	                    )
 	                );
@@ -84251,7 +84198,9 @@
 	                        _react2.default.createElement(_Divider2.default, { style: style.shortLine }),
 	                        _react2.default.createElement(_FormRadioButtons2.default, { order: '1', label: 'Image Corrupts', id: 'imgCorrupts', state: this.props.state, options: this.props.corruptedImageOptions, updateState: this.props.updateState }),
 	                        _react2.default.createElement(_Divider2.default, { style: style.longLine }),
-	                        _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'Video Corrupts', id: 'videoCorrupts', state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
+	                        _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'Protocol Buffer Corrupts', id: 'bufferCorrupts', state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
+	                        _react2.default.createElement(_Divider2.default, { style: style.longLine }),
+	                        _react2.default.createElement(_FormToggle2.default, { order: '3', label: 'Video Corrupts', id: 'videoCorrupts', state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
 	                        _react2.default.createElement(_Divider2.default, { style: style.longLine })
 	                    )
 	                );
@@ -84658,6 +84607,10 @@
 
 	var _FlatButton2 = _interopRequireDefault(_FlatButton);
 
+	var _FormToggle = __webpack_require__(586);
+
+	var _FormToggle2 = _interopRequireDefault(_FormToggle);
+
 	var _Paper = __webpack_require__(214);
 
 	var _Paper2 = _interopRequireDefault(_Paper);
@@ -84676,8 +84629,6 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 	var _ = __webpack_require__(466);
 
 	var SettingPageThree = _react2.default.createClass({
@@ -84685,6 +84636,7 @@
 
 	    getInitialState: function getInitialState() {
 	        return {
+	            connectionRefuse: false,
 	            phase: 'intro',
 	            action: 'poor',
 	            startTime: '',
@@ -84695,14 +84647,15 @@
 	    },
 	    resetForm: function resetForm() {
 	        this.setState({
+	            connectionRefuse: false,
 	            action: 'poor',
 	            startTime: '',
 	            duration: '',
 	            fps: ''
 	        });
 	    },
-	    setThrottlable: function setThrottlable(url) {
-	        //console.log("sent!");
+	    sendRequest: function sendRequest(url) {
+	        console.log("sent!", url);
 	        _jquery2.default.ajax({
 	            url: url,
 	            dataType: 'json',
@@ -84773,107 +84726,112 @@
 	    },
 	    handleAdd: function handleAdd(e) {
 	        e.preventDefault();
-	        var passByReference = { noError: true };
-	        if (this.state.phase == "duringGame") {
-	            this.checkValidity("Start Time", "startTime", passByReference);
-	            if (this.state.action == "poor" || this.state.action == "set-fps") {
-	                this.checkValidity("Duration", "duration", passByReference);
-	                if (this.state.action == "set-fps") {
-	                    this.checkValidity("Fps", "fps", passByReference);
+	        if (this.state.connectionRefuse) {
+	            var url = this.props.urlPrefix + "/v4/trial/set-next-ws-connection-refused/" + this.props.cid; //change to real url: delete this line
+	            this.sendRequest(url);
+	        } else {
+	            var passByReference = { noError: true };
+	            if (this.state.phase == "duringGame") {
+	                this.checkValidity("Start Time", "startTime", passByReference);
+	                if (this.state.action == "poor" || this.state.action == "set-fps") {
+	                    this.checkValidity("Duration", "duration", passByReference);
+	                    if (this.state.action == "set-fps") {
+	                        this.checkValidity("Fps", "fps", passByReference);
+	                    }
 	                }
 	            }
-	        }
-	        var startTime = 0;
-	        var duration = 0;
-	        var debugTimeLimit = parseFloat(this.props.debugTimeLimit);
-	        if (this.state.startTime) {
-	            startTime = parseFloat(this.state.startTime);
-	        }
-	        if (this.state.duration) {
-	            duration = parseFloat(this.state.duration);
-	        }
-	        if (startTime + duration > debugTimeLimit) {
-	            if (startTime > debugTimeLimit) {
-	                passByReference.noError = false;
-	                alert("Your start time exceeds time limit. Please do it again.");
-	            } else {
-	                duration = debugTimeLimit - startTime;
-	                if (duration == 0) {
+	            var startTime = 0;
+	            var duration = 0;
+	            var debugTimeLimit = parseFloat(this.props.debugTimeLimit);
+	            if (this.state.startTime) {
+	                startTime = parseFloat(this.state.startTime);
+	            }
+	            if (this.state.duration) {
+	                duration = parseFloat(this.state.duration);
+	            }
+	            if (startTime + duration > debugTimeLimit) {
+	                if (startTime > debugTimeLimit) {
 	                    passByReference.noError = false;
-	                    alert("Please don't set ftp at the end of game.");
-	                }
-	            }
-	        }
-	        if (passByReference.noError) {
-	            var commands = this.state.commands;
-	            var commandObj = {
-	                "trigger": "after-connect",
-	                "type": this.state.action,
-	                "delay": 0
-	            };
-	            var unthrottleObj = {
-	                "trigger": "after-connect",
-	                "type": "unthrottle",
-	                "delay": 0
-	            };
-	            var params = { "fps": 0 };
-	            if (this.state.phase == "intro") {
-	                if (this.state.action == "poor") {
-	                    commandObj = {
-	                        "trigger": "on-connect",
-	                        "type": "set-fps",
-	                        "params": {
-	                            "fps": 2
-	                        }
-	                    };
-	                    unthrottleObj.delay = 4000;
-	                    commands = this.deleteRepeatCommand(commands, commandObj);
-	                    commands = this.deleteRepeatCommand(commands, unthrottleObj);
+	                    alert("Your start time exceeds time limit. Please do it again.");
 	                } else {
-	                    commandObj.delay = 1000;
-	                    commands = this.deleteRepeatCommand(commands, commandObj);
-	                }
-	            } else if (this.state.phase == "duringGame") {
-	                if (this.state.action == "poor") {
-	                    commandObj.type = "set-fps";
-	                    params.fps = 5;
-	                    commandObj["params"] = params;
-	                    unthrottleObj.delay = (startTime + 3 + duration) * 1000;
-	                } else if (this.state.action == "set-fps") {
-	                    params.fps = parseFloat(this.state.fps);
-	                    commandObj["params"] = params;
-	                    unthrottleObj.delay = (startTime + 3 + duration) * 1000;
-	                }
-	                commandObj.delay = (startTime + 3) * 1000;
-	                commands = this.deleteRepeatCommand(commands, commandObj);
-	                if (unthrottleObj.delay != 0) {
-	                    commands = this.deleteRepeatCommand(commands, unthrottleObj);
+	                    duration = debugTimeLimit - startTime;
+	                    if (duration == 0) {
+	                        passByReference.noError = false;
+	                        alert("Please don't set ftp at the end of game.");
+	                    }
 	                }
 	            }
-	            commands.sort(function (a, b) {
-	                if (b.trigger == a.trigger) {
-	                    if (a.delay < b.delay) {
+	            if (passByReference.noError) {
+	                var commands = this.state.commands;
+	                var commandObj = {
+	                    "trigger": "after-connect",
+	                    "type": this.state.action,
+	                    "delay": 0
+	                };
+	                var unthrottleObj = {
+	                    "trigger": "after-connect",
+	                    "type": "unthrottle",
+	                    "delay": 0
+	                };
+	                var params = { "fps": 0 };
+	                if (this.state.phase == "intro") {
+	                    if (this.state.action == "poor") {
+	                        commandObj = {
+	                            "trigger": "on-connect",
+	                            "type": "set-fps",
+	                            "params": {
+	                                "fps": 2
+	                            }
+	                        };
+	                        unthrottleObj.delay = 4000;
+	                        commands = this.deleteRepeatCommand(commands, commandObj);
+	                        commands = this.deleteRepeatCommand(commands, unthrottleObj);
+	                    } else {
+	                        commandObj.delay = 1000;
+	                        commands = this.deleteRepeatCommand(commands, commandObj);
+	                    }
+	                } else if (this.state.phase == "duringGame") {
+	                    if (this.state.action == "poor") {
+	                        commandObj.type = "set-fps";
+	                        params.fps = 5;
+	                        commandObj["params"] = params;
+	                        unthrottleObj.delay = (startTime + 3 + duration) * 1000;
+	                    } else if (this.state.action == "set-fps") {
+	                        params.fps = parseFloat(this.state.fps);
+	                        commandObj["params"] = params;
+	                        unthrottleObj.delay = (startTime + 3 + duration) * 1000;
+	                    }
+	                    commandObj.delay = (startTime + 3) * 1000;
+	                    commands = this.deleteRepeatCommand(commands, commandObj);
+	                    if (unthrottleObj.delay != 0) {
+	                        commands = this.deleteRepeatCommand(commands, unthrottleObj);
+	                    }
+	                }
+	                commands.sort(function (a, b) {
+	                    if (b.trigger == a.trigger) {
+	                        if (a.delay < b.delay) {
+	                            return -1;
+	                        } else if (a.delay > b.delay) {
+	                            return 1;
+	                        }
+	                        return 0;
+	                    }
+	                    //return b.trigger < a.trigger ? -1 : b.trigger > a.trigger ? 1 : 0;
+	                    if (b.trigger < a.trigger) {
 	                        return -1;
-	                    } else if (a.delay > b.delay) {
+	                    }
+	                    if (b.trigger > a.trigger) {
 	                        return 1;
 	                    }
-	                    return 0;
-	                }
-	                //return b.trigger < a.trigger ? -1 : b.trigger > a.trigger ? 1 : 0;
-	                if (b.trigger < a.trigger) {
-	                    return -1;
-	                }
-	                if (b.trigger > a.trigger) {
-	                    return 1;
-	                }
-	            });
-	            this.setState({ commands: commands });
-	            //Start sending requests to server
-	            var cid = this.props.cid;
-	            this.setThrottlable(this.props.urlPrefix + "/v4/trial/set-next-throttlable/" + cid); //change to real url: delete the first part
-	            this.postWebRequests(this.props.urlPrefix + "/v4/pre-schedule", cid, commands); //change to real url: delete the first part
-	            console.log("Added!");
-	            this.resetForm();
+	                });
+	                this.setState({ commands: commands });
+	                //Start sending requests to server
+	                var cid = this.props.cid;
+	                this.sendRequest(this.props.urlPrefix + "/v4/trial/set-next-throttlable/" + cid); //change to real url: delete the first part
+	                this.postWebRequests(this.props.urlPrefix + "/v4/pre-schedule", cid, commands); //change to real url: delete the first part
+	                console.log("Added!");
+	                this.resetForm();
+	            }
 	        }
 	    },
 	    handleReset: function handleReset(e) {
@@ -84881,12 +84839,7 @@
 	        console.log("reset!");
 	        this.resetForm();
 	        this.setState({ commands: [] });
-	        var commands = [{
-	            "trigger": "on-connect",
-	            "type": "unthrottle"
-	        }];
-	        var cid = this.props.cid;
-	        this.postWebRequests(this.props.urlPrefix + "/v4/pre-schedule", cid, commands);
+	        this.props.handleReset();
 	    },
 	    /*handleDelete: function(index) {
 	        var items = this.props.state.webItems;
@@ -84906,6 +84859,12 @@
 	    },
 	    onChangePhase: function onChangePhase(key, e) {
 	        this.setState({ phase: key });
+	        console.log(this.state);
+	    },
+	    onChangeChecked: function onChangeChecked(id) {
+	        var obj = {};
+	        obj[id] = !this.state[id];
+	        this.setState(obj);
 	        console.log(this.state);
 	    },
 	    displayPhaseButton: function displayPhaseButton() {
@@ -84960,10 +84919,53 @@
 	            }
 	        }
 	    },
+	    displayMain: function displayMain() {
+	        var style = {
+	            label: {
+	                fontFamily: 'Roboto, sans-serif',
+	                fontSize: '16px',
+	                fontWeight: '400'
+	            },
+	            radioButton: {
+	                width: '50%',
+	                fontFamily: 'Roboto, sans-serif',
+	                fontSize: '13px',
+	                fontWeight: '400'
+	            },
+	            innerBlock: {
+	                height: '438px'
+	            }
+	        };
+	        if (!this.state.connectionRefuse) {
+	            return _react2.default.createElement(
+	                'div',
+	                { style: style.innerBlock },
+	                _react2.default.createElement(
+	                    'label',
+	                    { style: style.label },
+	                    'Choose a phase:'
+	                ),
+	                this.displayPhaseButton(),
+	                _react2.default.createElement(
+	                    'label',
+	                    { style: style.label },
+	                    'Choose an action:'
+	                ),
+	                _react2.default.createElement(
+	                    _RadioButton.RadioButtonGroup,
+	                    { name: 'webSettings', valueSelected: this.state.action, onChange: this.onChangeSelect },
+	                    _react2.default.createElement(_RadioButton.RadioButton, { value: 'poor', label: 'Poor connection', style: style.radioButton }),
+	                    _react2.default.createElement(_RadioButton.RadioButton, { value: 'set-fps', label: 'Set fps...', disabled: this.state.phase == "intro" ? true : false, style: style.radioButton }),
+	                    _react2.default.createElement(_RadioButton.RadioButton, { value: 'terminate-ws', label: 'Terminate web socket', style: style.radioButton })
+	                ),
+	                this.displayTextFields()
+	            );
+	        } else {
+	            return _react2.default.createElement('div', { style: style.innerBlock });
+	        }
+	    },
 	    render: function render() {
-	        var _style;
-
-	        var style = (_style = {
+	        var style = {
 	            settingPage: {
 	                height: '589px'
 	            },
@@ -84987,40 +84989,33 @@
 	                fontSize: '28px',
 	                marginTop: '10px'
 	            },
+	            textField: {
+	                display: 'inline-block'
+	            },
 	            label: {
 	                fontFamily: 'Roboto, sans-serif',
 	                fontSize: '16px',
 	                fontWeight: '400'
 	            },
-	            radioButton: {
-	                width: '50%',
-	                fontFamily: 'Roboto, sans-serif',
-	                fontSize: '13px',
-	                fontWeight: '400'
+	            add: {
+	                backgroundColor: '#fc981c',
+	                color: '#ffffff'
 	            },
-	            textField: {
-	                display: 'inline-block'
+	            reset: {
+	                backgroundColor: '#999999',
+	                color: '#ffffff'
+	            },
+	            phaseButton: {
+	                margin: 12
+	            },
+	            buttonText: {
+	                textTransform: 'capitalize'
+	            },
+	            buttonActive: {
+	                margin: 12,
+	                backgroundColor: '#c8caea'
 	            }
-	        }, _defineProperty(_style, 'label', {
-	            fontFamily: 'Roboto, sans-serif',
-	            fontSize: '16px',
-	            fontWeight: '400'
-	        }), _defineProperty(_style, 'add', {
-	            backgroundColor: '#fc981c',
-	            color: '#ffffff'
-	        }), _defineProperty(_style, 'reset', {
-	            backgroundColor: '#999999',
-	            color: '#ffffff'
-	        }), _defineProperty(_style, 'innerBlock', {
-	            height: '477px'
-	        }), _defineProperty(_style, 'phaseButton', {
-	            margin: 12
-	        }), _defineProperty(_style, 'buttonText', {
-	            textTransform: 'capitalize'
-	        }), _defineProperty(_style, 'buttonActive', {
-	            margin: 12,
-	            backgroundColor: '#c8caea'
-	        }), _style);
+	        };
 	        return _react2.default.createElement(
 	            'div',
 	            { style: style.settingPage },
@@ -85033,29 +85028,9 @@
 	                    'Web Socket/Connection'
 	                ),
 	                _react2.default.createElement(_Divider2.default, { style: style.shortLine }),
-	                _react2.default.createElement(
-	                    'div',
-	                    { style: style.innerBlock },
-	                    _react2.default.createElement(
-	                        'label',
-	                        { style: style.label },
-	                        'Choose a phase:'
-	                    ),
-	                    this.displayPhaseButton(),
-	                    _react2.default.createElement(
-	                        'label',
-	                        { style: style.label },
-	                        'Choose an action:'
-	                    ),
-	                    _react2.default.createElement(
-	                        _RadioButton.RadioButtonGroup,
-	                        { name: 'webSettings', valueSelected: this.state.action, onChange: this.onChangeSelect },
-	                        _react2.default.createElement(_RadioButton.RadioButton, { value: 'poor', label: 'Poor connection', style: style.radioButton }),
-	                        _react2.default.createElement(_RadioButton.RadioButton, { value: 'set-fps', label: 'Set fps...', disabled: this.state.phase == "intro" ? true : false, style: style.radioButton }),
-	                        _react2.default.createElement(_RadioButton.RadioButton, { value: 'terminate-ws', label: 'Terminate web socket', style: style.radioButton })
-	                    ),
-	                    this.displayTextFields()
-	                ),
+	                _react2.default.createElement(_FormToggle2.default, { order: '1', label: 'Connection Refused', id: 'connectionRefuse', state: this.state, onChangeChecked: this.onChangeChecked }),
+	                _react2.default.createElement(_Divider2.default, { style: style.longLine }),
+	                this.displayMain(),
 	                _react2.default.createElement(
 	                    _index.Row,
 	                    { center: 'xs' },
@@ -85232,7 +85207,11 @@
 		},
 		"videoCorrupts": {
 			"type": "checkbox",
-			"url": "/v3/trial/set-next-video-frames-corrupted/:cid"
+			"url": "/v4/trial/set-next-video-frames-corrupted/:cid"
+		},
+		"bufferCorrupts": {
+			"type": "checkbox",
+			"url": "/v4/trial/set-next-protobuf-corrupted/:cid"
 		}
 	};
 
@@ -85729,8 +85708,7 @@
 
 	    handleClose: function handleClose(e) {
 	        this.props.updateRootState("openRawData", false);
-	        this.props.updateRootState("index", 0);
-	        this.props.updateRootState("row", 0);
+	        this.props.updateRootState("log", {});
 	    },
 	    render: function render() {
 	        return _react2.default.createElement(
@@ -85739,7 +85717,7 @@
 	            _react2.default.createElement(
 	                'pre',
 	                null,
-	                this.props.cids.length > 0 ? JSON.stringify(this.props.cids[this.props.index].logs[this.props.row], null, 4) : null
+	                JSON.stringify(this.props.log, null, 4)
 	            )
 	        );
 	        //ReactDOM.findDOMNode(this.refs.nameInput).focus();
