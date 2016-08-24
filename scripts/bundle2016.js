@@ -268,6 +268,7 @@
 	        }
 	    },
 	    render: function render() {
+	        console.log('admock render');
 	        var index = _.findIndex(this.state.cids, function (item) {
 	            return item.cid == this.state.activeCid;
 	        }.bind(this));
@@ -68803,15 +68804,17 @@
 	        var time = moment().valueOf();
 	        var interval = time - this.state.timer;
 	        console.log(interval);
-	        this.setState({ timer: time });
-	        if (nextProps.state.activeCid != this.state.activeCid) {
+	        //this.setState({timer: time});
+	        if (nextProps.state.activeCid != this.props.state.activeCid) {
+	            console.log("true, activeCid changed");
 	            return true;
 	        }
 	        if (interval < 800) {
+	            console.log("false, interval < 800");
 	            return false;
 	        }
 	        if (this.props.state.activeCid) {
-	            //console.log(this.state.cidLogPairs[this.props.state.activeCid].length, nextState.cidLogPairs[this.props.state.activeCid].length);
+	            console.log(this.state.cidLogPairs[this.props.state.activeCid].length, nextState.cidLogPairs[this.props.state.activeCid].length);
 	            return this.state.cidLogPairs[this.props.state.activeCid].length < nextState.cidLogPairs[this.props.state.activeCid].length;
 	        }
 	        return true;
@@ -68842,7 +68845,9 @@
 	        var uiVersion = result["@data"]["common"].ui_version;
 	        var adId = result["@data"]["common"].ad_id;
 	        var logs = [result];
+	        var time = moment().valueOf();
 	        this.updateCidLogPair(cid, logs);
+	        this.setState({ timer: time });
 	        if (result.ua.browser.name) {
 	            //name = result.ua.browser.name + " (" + cid.substring(0, 8) + ")";
 	            name = result.ua.browser.name + " (" + cid.substring(0, 8) + ")";
@@ -68878,13 +68883,17 @@
 	                this.props.updateRootCidDetails(index, "sdkVersion", sdkVersion);
 	                this.props.updateRootCidDetails(index, "adId", adId);
 	                //this.props.updateRootCidDetails(index, "logs", [result]);
+	                var time = moment().valueOf();
 	                this.updateCidLogPair(cid, [result]);
+	                this.setState({ timer: time });
 	            } else if (sessionId == this.props.state.cids[index].sessionId) {
 	                //var logs = this.props.state.cids[index].logs;
 	                var logs = _.cloneDeep(this.state.cidLogPairs[cid]);
 	                logs.push(result);
 	                //this.props.updateRootCidDetails(index, "logs", logs);
+	                var time = moment().valueOf();
 	                this.updateCidLogPair(cid, logs);
+	                this.setState({ timer: time });
 	                if (result["@data"]["@event_name"] == "intro") {
 	                    this.props.updateRootCidDetails(index, "uiVersion", sdkVersion);
 	                }
@@ -68920,7 +68929,7 @@
 	        };
 	        if (this.props.state.activeCid != '') {
 	            //console.log("rendering display table", this.state.cidLogPairs, this.props.state.activeCid);
-
+	            //console.log("rendering display table");
 	            // console.log(this.state.cidLogPairs[this.props.state.activeCid]);
 	            return _react2.default.createElement(
 	                'div',
