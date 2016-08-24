@@ -68809,10 +68809,10 @@
 	            console.log("true, activeCid changed");
 	            return true;
 	        }
-	        if (interval < 800) {
-	            console.log("false, interval < 800");
+	        /*if (interval < 800) {
+	            console.log("false, interval < 800")
 	            return false;
-	        }
+	        }*/
 	        if (this.props.state.activeCid) {
 	            console.log(this.state.cidLogPairs[this.props.state.activeCid].length, nextState.cidLogPairs[this.props.state.activeCid].length);
 	            return this.state.cidLogPairs[this.props.state.activeCid].length < nextState.cidLogPairs[this.props.state.activeCid].length;
@@ -68886,7 +68886,7 @@
 	                //this.props.updateRootCidDetails(index, "logs", [result]);
 	                var time = moment().valueOf();
 	                this.updateCidLogPair(cid, [result]);
-	                this.setState({ timer: time });
+	                //this.setState({timer: time});
 	            } else if (sessionId == this.props.state.cids[index].sessionId) {
 	                //var logs = this.props.state.cids[index].logs;
 	                var logs = _.cloneDeep(this.state.cidLogPairs[cid]);
