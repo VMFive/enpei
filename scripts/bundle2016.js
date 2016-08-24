@@ -68817,6 +68817,7 @@
 	            console.log(this.state.cidLogPairs[this.props.state.activeCid].length, nextState.cidLogPairs[this.props.state.activeCid].length);
 	            return this.state.cidLogPairs[this.props.state.activeCid].length < nextState.cidLogPairs[this.props.state.activeCid].length;
 	        }
+	        console.log("true");
 	        return true;
 	        //return (this.props.state.activeCid != nextProps.state.activeCid);
 	    },
