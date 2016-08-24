@@ -68326,6 +68326,7 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var moment = __webpack_require__(470);
+	var _ = __webpack_require__(466);
 
 	var LogPanel = _react2.default.createClass({
 	    displayName: 'LogPanel',
@@ -68334,25 +68335,43 @@
 	        return {
 	            cidLogPairs: {},
 	            sessionId: '',
-	            timer: null
+	            timer: 0,
+	            webTimer: null
 	        };
 	    },
-	    componentDidMount: function componentDidMount() {
-	        //console.log("mount!");
-	        //alert("mount!");
+	    shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
+	        var time = moment().valueOf();
+	        var interval = time - this.state.timer;
+	        console.log(interval);
+	        this.setState({ timer: time });
+	        if (nextProps.state.activeCid != this.state.activeCid) {
+	            return true;
+	        }
+	        if (interval < 800) {
+	            return false;
+	        }
+	        if (this.props.state.activeCid) {
+	            //console.log(this.state.cidLogPairs[this.props.state.activeCid].length, nextState.cidLogPairs[this.props.state.activeCid].length);
+	            return this.state.cidLogPairs[this.props.state.activeCid].length < nextState.cidLogPairs[this.props.state.activeCid].length;
+	        }
+	        return true;
+	        //return (this.props.state.activeCid != nextProps.state.activeCid);
 	    },
 	    handleOpen: function handleOpen(ws) {
-	        this.setState({ timer: setInterval(function () {
+	        this.setState({ webTimer: setInterval(function () {
 	                ws.send('whatever');
 	                console.log("sent whatever");
 	            }, 3000) });
 	    },
 	    handleClose: function handleClose() {
-	        clearInterval(this.state.timer);
+	        clearInterval(this.state.webTimer);
 	    },
 	    updateCidLogPair: function updateCidLogPair(cid, logs) {
-	        var obj = this.state.cidLogPairs;
-	        obj[cid] = logs;
+	        var sortedLogs = _.sortBy(logs, function (log) {
+	            return log["@data"]["@client_epoch_time"];
+	        });
+	        var obj = _.cloneDeep(this.state.cidLogPairs);
+	        obj[cid] = sortedLogs;
 	        this.setState({ cidLogPairs: obj });
 	    },
 	    addNewCid: function addNewCid(result, cid, index) {
@@ -68402,7 +68421,7 @@
 	                this.updateCidLogPair(cid, [result]);
 	            } else if (sessionId == this.props.state.cids[index].sessionId) {
 	                //var logs = this.props.state.cids[index].logs;
-	                var logs = this.state.cidLogPairs[cid];
+	                var logs = _.cloneDeep(this.state.cidLogPairs[cid]);
 	                logs.push(result);
 	                //this.props.updateRootCidDetails(index, "logs", logs);
 	                this.updateCidLogPair(cid, logs);
@@ -68413,14 +68432,14 @@
 	        }
 	    },
 	    onClickRaw: function onClickRaw(row, e) {
-	        //var log = this.props.state.cids[index].logs[row];
-	        var time = moment(log["@data"]["@client_epoch_time"]).format("YYYY/MM/DD HH:mm:ss.SSS");
 	        this.props.updateRootState("openRawData", true);
-	        this.props.updateRootState("log", this.state.cidLogPairs[this.props.activeCid][row]);
-	        //console.log(log);
+	        this.props.updateRootState("log", this.state.cidLogPairs[this.props.state.activeCid][row]);
 	    },
 	    displayTable: function displayTable() {
 	        var style = {
+	            noWidth: {
+	                width: '64px'
+	            },
 	            timeWidth: {
 	                width: '200px'
 	            },
@@ -68441,6 +68460,8 @@
 	        };
 	        if (this.props.state.activeCid != '') {
 	            //console.log("rendering display table", this.state.cidLogPairs, this.props.state.activeCid);
+
+	            // console.log(this.state.cidLogPairs[this.props.state.activeCid]);
 	            return _react2.default.createElement(
 	                'div',
 	                { style: style.div },
@@ -68453,6 +68474,11 @@
 	                        _react2.default.createElement(
 	                            _Table.TableRow,
 	                            null,
+	                            _react2.default.createElement(
+	                                _Table.TableHeaderColumn,
+	                                { style: style.noWidth },
+	                                'No'
+	                            ),
 	                            _react2.default.createElement(
 	                                _Table.TableHeaderColumn,
 	                                { style: style.timeWidth, tooltip: '@client_epoch_time' },
@@ -68498,6 +68524,11 @@
 	                            return _react2.default.createElement(
 	                                _Table.TableRow,
 	                                { key: key },
+	                                _react2.default.createElement(
+	                                    _Table.TableRowColumn,
+	                                    { style: style.noWidth },
+	                                    key
+	                                ),
 	                                _react2.default.createElement(
 	                                    _Table.TableRowColumn,
 	                                    { style: style.timeWidth },
