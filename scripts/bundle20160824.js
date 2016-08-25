@@ -154,7 +154,7 @@
 	                primaryText: "Local"
 	            }, {
 	                id: 1,
-	                value: "http://mock.adserver.vm5apis.com",
+	                value: "http://mock-campaign.vm5apis.com/",
 	                primaryText: "Cloud"
 	            }, {
 	                id: 2,
