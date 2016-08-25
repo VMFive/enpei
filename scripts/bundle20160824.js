@@ -126,6 +126,13 @@
 	var ContentBox = _react2.default.createClass({
 	    displayName: 'ContentBox',
 
+	    /*shouldComponentUpdate: function(nextProps, nextState) {
+	        if (nextState.preScheduleEmpty == this.state.preScheduleEmpty && nextState.cids == this.state.cids && nextState.activeCid == this.state.activeCid && nextState.urlPrefix == this.state.urlPrefix && 
+	            nextState.version == this.state.version && nextState.serve) {
+	            return false;
+	        }
+	        return true;
+	    },*/
 	    getInitialState: function getInitialState() {
 	        return {
 	            cids: [],
@@ -148,7 +155,8 @@
 	            openEditName: false,
 	            openUrlInput: false,
 	            openRawData: false,
-	            log: {}
+	            log: {},
+	            preScheduleEmpty: true
 	        };
 	    },
 	    updateRootState: function updateRootState(key, value) {
@@ -240,12 +248,12 @@
 	                        _react2.default.createElement(
 	                            _index.Col,
 	                            { xs: 6, style: { padding: '20px' } },
-	                            _react2.default.createElement(_SettingForm2.default, { cid: this.state.activeCid, version: this.state.version, urlPrefix: this.state.urlPrefix })
+	                            _react2.default.createElement(_SettingForm2.default, { cid: this.state.activeCid, version: this.state.version, urlPrefix: this.state.urlPrefix, preScheduleEmpty: this.state.preScheduleEmpty })
 	                        ),
 	                        _react2.default.createElement(
 	                            _index.Col,
 	                            { xs: 6, style: { padding: '20px' } },
-	                            _react2.default.createElement(_EventPanel2.default, { cid: this.state.activeCid, version: this.state.version, url: debugUrl, pullInterval: 500 })
+	                            _react2.default.createElement(_EventPanel2.default, { cid: this.state.activeCid, version: this.state.version, preScheduleEmpty: this.state.preScheduleEmpty, url: debugUrl, pullInterval: 500, updateRootState: this.updateRootState })
 	                        )
 	                    ),
 	                    _react2.default.createElement(_Divider2.default, null)
@@ -45517,6 +45525,11 @@
 	                } else {
 	                    this.setState({ time: 60 });
 	                }
+	                if (!data.v4.preScheduleCids[this.props.cid] && !this.props.preScheduleEmpty) {
+	                    this.props.updateRootState("preScheduleEmpty", true);
+	                } else if (data.v4.preScheduleCids[this.props.cid] && this.props.preScheduleEmpty) {
+	                    this.props.updateRootState("preScheduleEmpty", false);
+	                }
 	            }.bind(this),
 	            error: function (xhr, status, err) {
 	                console.log(this.props.url, status, err.toString());
@@ -83564,7 +83577,7 @@
 	            case 2:
 	                return _react2.default.createElement(_SettingPageTwo2.default, { version: this.props.version, state: this.state, updateState: this.updateState, onChangeChecked: this.onChangeChecked, noVmOptions: noVmOptions, corruptedImageOptions: corruptedImageOptions });
 	            case 3:
-	                return _react2.default.createElement(_SettingPageThree2.default, { cid: this.props.cid, urlPrefix: this.props.urlPrefix, debugTimeLimit: this.state.debugTimeLimit, handleReset: this.handleReset });
+	                return _react2.default.createElement(_SettingPageThree2.default, { cid: this.props.cid, urlPrefix: this.props.urlPrefix, debugTimeLimit: this.state.debugTimeLimit, handleReset: this.handleReset, preScheduleEmpty: this.props.preScheduleEmpty });
 	        }
 	    },
 	    updateState: function updateState(id, value) {
@@ -85202,6 +85215,11 @@
 	var SettingPageThree = _react2.default.createClass({
 	    displayName: 'SettingPageThree',
 
+	    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	        if (nextProps.preScheduleEmpty != this.props.preScheduleEmpty) {
+	            this.setState({ commands: [] });
+	        }
+	    },
 	    getInitialState: function getInitialState() {
 	        return {
 	            connectionRefuse: false,
