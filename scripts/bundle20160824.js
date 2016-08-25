@@ -131,6 +131,7 @@
 	            cids: [],
 	            activeCid: '',
 	            urlPrefix: 'http://campaign.vm5apis.com',
+	            version: "v4",
 	            serverOptions: [{
 	                id: 0,
 	                value: "http://campaign.vm5apis.com",
@@ -239,12 +240,12 @@
 	                        _react2.default.createElement(
 	                            _index.Col,
 	                            { xs: 6, style: { padding: '20px' } },
-	                            _react2.default.createElement(_SettingForm2.default, { cid: this.state.activeCid, urlPrefix: this.state.urlPrefix })
+	                            _react2.default.createElement(_SettingForm2.default, { cid: this.state.activeCid, version: this.state.version, urlPrefix: this.state.urlPrefix })
 	                        ),
 	                        _react2.default.createElement(
 	                            _index.Col,
 	                            { xs: 6, style: { padding: '20px' } },
-	                            _react2.default.createElement(_EventPanel2.default, { cid: this.state.activeCid, url: debugUrl, pullInterval: 500 })
+	                            _react2.default.createElement(_EventPanel2.default, { cid: this.state.activeCid, version: this.state.version, url: debugUrl, pullInterval: 500 })
 	                        )
 	                    ),
 	                    _react2.default.createElement(_Divider2.default, null)
@@ -278,7 +279,7 @@
 	            _react2.default.createElement(
 	                'div',
 	                null,
-	                _react2.default.createElement(_CidMenu2.default, { cids: this.state.cids, index: index, open: true, serverOptions: this.state.serverOptions, urlPrefix: this.state.urlPrefix, activeCid: this.state.activeCid, updateRootState: this.updateRootState }),
+	                _react2.default.createElement(_CidMenu2.default, { cids: this.state.cids, index: index, open: true, serverOptions: this.state.serverOptions, urlPrefix: this.state.urlPrefix, version: this.state.version, activeCid: this.state.activeCid, updateRootState: this.updateRootState }),
 	                this.displayMainPanel(),
 	                _react2.default.createElement(_LogPanel2.default, { state: this.state, pushCid: this.pushCid, updateRootState: this.updateRootState, updateRootCidDetails: this.updateRootCidDetails }),
 	                _react2.default.createElement(_DialogPanel2.default, { cid: this.state.activeCid, openEditName: this.state.openEditName, updateRootState: this.updateRootState, updateRootCidName: this.updateRootCidName }),
@@ -25846,10 +25847,10 @@
 	            this.props.updateRootState("urlPrefix", value);
 	        }
 	    },
-	    /*onClickManager: function(e) {
-	        console.log("clicked!");
-	        this.props.updateRootState("openManager", true);
-	    },*/
+	    handleSelectVersion: function handleSelectVersion(e, key, value) {
+	        console.log("select value:", value);
+	        this.props.updateRootState("version", value);
+	    },
 	    handleMenuToggle: function handleMenuToggle(listItem) {
 	        this.props.updateRootState("activeCid", listItem.props.value);
 	        console.log("listItem", listItem.props.value);
@@ -25955,6 +25956,22 @@
 	                    _DropDownMenu2.default,
 	                    { value: this.props.urlPrefix, onChange: this.handleSelect },
 	                    serverOptions
+	                )
+	            ),
+	            _react2.default.createElement(_Divider2.default, null),
+	            _react2.default.createElement(
+	                'div',
+	                { style: style.div },
+	                _react2.default.createElement(
+	                    'label',
+	                    { style: style.label },
+	                    'Version: '
+	                ),
+	                _react2.default.createElement(
+	                    _DropDownMenu2.default,
+	                    { value: this.props.version, onChange: this.handleSelectVersion },
+	                    _react2.default.createElement(_MenuItem2.default, { key: 0, value: 'v3', primaryText: 'v.3' }),
+	                    _react2.default.createElement(_MenuItem2.default, { key: 1, value: 'v4', primaryText: 'v.4' })
 	                )
 	            ),
 	            _react2.default.createElement(_Divider2.default, null),
@@ -45490,9 +45507,10 @@
 	            success: function (data) {
 	                this.setState({ data: data });
 	                var debugTimeLimit = '';
+	                var version = this.props.version;
 	                if (data.v4.timelimitCids[this.props.cid]) {
 	                    //console.log("Load api time");
-	                    debugTimeLimit = data.v4.timelimitCids[this.props.cid];
+	                    debugTimeLimit = data[version].timelimitCids[this.props.cid];
 	                    debugTimeLimit = parseFloat(debugTimeLimit);
 	                    //console.log(debugTimeLimit);
 	                    this.setState({ time: debugTimeLimit });
@@ -45519,7 +45537,7 @@
 	        var flagData = [];
 	        var lastFps = 100;
 	        //{x: 0, text:'No speed limit', title:'No speed limit'}
-	        if (this.state.data.v4 && this.state.data.v4.preScheduleCids && this.state.data.v4.preScheduleCids[this.props.cid]) {
+	        if (this.props.version == "v4" && this.state.data.v4 && this.state.data.v4.preScheduleCids && this.state.data.v4.preScheduleCids[this.props.cid]) {
 	            objs = this.state.data.v4.preScheduleCids[this.props.cid];
 	            var filtered = [];
 	            filtered = _.filter(objs, function (obj) {
@@ -45589,7 +45607,7 @@
 	        return _react2.default.createElement(
 	            _Paper2.default,
 	            { style: style.eventPanel },
-	            _react2.default.createElement(_SettingsBlock2.default, { cid: this.props.cid, url: this.props.url, pullInterval: this.props.pullInterval, time: this.state.time, data: this.state.data, mapping: this.state.mapping }),
+	            _react2.default.createElement(_SettingsBlock2.default, { cid: this.props.cid, url: this.props.url, pullInterval: this.props.pullInterval, time: this.state.time, data: this.state.data, mapping: this.state.mapping, version: this.props.version }),
 	            _react2.default.createElement(_Chart2.default, { container: 'webSettingChart', cid: this.props.cid, url: this.props.url, urlPrefix: this.props.urlPrefix, time: this.state.time, lineData: lineData, flagData: flagData })
 	        );
 	    }
@@ -56259,8 +56277,9 @@
 
 	    //Return API status
 	    render: function render() {
-	        var debugStatus = this.props.data.v4;
-	        if (this.props.data.v3) {
+	        var version = this.props.version;
+	        var debugStatus = this.props.data[version];
+	        if (version == "v4" && this.props.data.v3) {
 	            debugStatus.onetimeTokenStatusCodeCids = this.props.data.v3.onetimeTokenStatusCodeCids;
 	        }
 	        var mapping = this.props.mapping;
@@ -68796,15 +68815,13 @@
 	        return {
 	            cidLogPairs: {},
 	            sessionId: '',
-	            timer: 0,
 	            webTimer: null
 	        };
 	    },
 	    shouldComponentUpdate: function shouldComponentUpdate(nextProps, nextState) {
-	        var time = moment().valueOf();
+	        /*var time = moment().valueOf();
 	        var interval = time - this.state.timer;
-	        console.log(interval);
-	        //this.setState({timer: time});
+	        console.log(interval);*/
 	        if (nextProps.state.activeCid != this.props.state.activeCid) {
 	            console.log("true, activeCid changed");
 	            return true;
@@ -68848,7 +68865,7 @@
 	        var logs = [result];
 	        var time = moment().valueOf();
 	        this.updateCidLogPair(cid, logs);
-	        this.setState({ timer: time });
+	        //this.setState({timer: time});
 	        if (result.ua.browser.name) {
 	            //name = result.ua.browser.name + " (" + cid.substring(0, 8) + ")";
 	            name = result.ua.browser.name + " (" + cid.substring(0, 8) + ")";
@@ -68867,36 +68884,38 @@
 	    handleData: function handleData(data) {
 	        var result = JSON.parse(data);
 	        console.log(result);
-	        var cid = result["@data"]["@profile_tokens"].cid;
-	        var index = _.findIndex(this.props.state.cids, function (item) {
-	            return item.cid == cid;
-	        });
-	        if (index < 0) {
-	            this.addNewCid(result, cid, index);
-	        } else {
-	            var sessionId = result["@data"]["@couple_tokens"].adplay_session_id;
-	            var sdkVersion = result["@data"]["common"].sdkvs;
-	            var uiVersion = result["@data"]["common"].ui_version;
-	            var adId = result["@data"]["common"].ad_id;
-	            if (sessionId != this.props.state.cids[index].sessionId) {
-	                this.props.updateRootCidDetails(index, "sessionId", sessionId);
-	                this.props.updateRootCidDetails(index, "uiVersion", "No information");
-	                this.props.updateRootCidDetails(index, "sdkVersion", sdkVersion);
-	                this.props.updateRootCidDetails(index, "adId", adId);
-	                //this.props.updateRootCidDetails(index, "logs", [result]);
-	                var time = moment().valueOf();
-	                this.updateCidLogPair(cid, [result]);
-	                //this.setState({timer: time});
-	            } else if (sessionId == this.props.state.cids[index].sessionId) {
-	                //var logs = this.props.state.cids[index].logs;
-	                var logs = _.cloneDeep(this.state.cidLogPairs[cid]);
-	                logs.push(result);
-	                //this.props.updateRootCidDetails(index, "logs", logs);
-	                var time = moment().valueOf();
-	                this.updateCidLogPair(cid, logs);
-	                this.setState({ timer: time });
-	                if (result["@data"]["@event_name"] == "intro") {
-	                    this.props.updateRootCidDetails(index, "uiVersion", sdkVersion);
+	        if (!result.adplay) {
+	            var cid = result["@data"]["@profile_tokens"].cid;
+	            var index = _.findIndex(this.props.state.cids, function (item) {
+	                return item.cid == cid;
+	            });
+	            if (index < 0) {
+	                this.addNewCid(result, cid, index);
+	            } else {
+	                var sessionId = result["@data"]["@couple_tokens"].adplay_session_id;
+	                var sdkVersion = result["@data"]["common"].sdkvs;
+	                var uiVersion = result["@data"]["common"].ui_version;
+	                var adId = result["@data"]["common"].ad_id;
+	                if (sessionId != this.props.state.cids[index].sessionId) {
+	                    this.props.updateRootCidDetails(index, "sessionId", sessionId);
+	                    this.props.updateRootCidDetails(index, "uiVersion", "No information");
+	                    this.props.updateRootCidDetails(index, "sdkVersion", sdkVersion);
+	                    this.props.updateRootCidDetails(index, "adId", adId);
+	                    //this.props.updateRootCidDetails(index, "logs", [result]);
+	                    var time = moment().valueOf();
+	                    this.updateCidLogPair(cid, [result]);
+	                    //this.setState({timer: time});
+	                } else if (sessionId == this.props.state.cids[index].sessionId) {
+	                    //var logs = this.props.state.cids[index].logs;
+	                    var logs = _.cloneDeep(this.state.cidLogPairs[cid]);
+	                    logs.push(result);
+	                    //this.props.updateRootCidDetails(index, "logs", logs);
+	                    var time = moment().valueOf();
+	                    this.updateCidLogPair(cid, logs);
+	                    //this.setState({timer: time});
+	                    if (result["@data"]["@event_name"] == "intro") {
+	                        this.props.updateRootCidDetails(index, "uiVersion", sdkVersion);
+	                    }
 	                }
 	            }
 	        }
@@ -83460,6 +83479,10 @@
 
 	var _index = __webpack_require__(220);
 
+	var _urlMappingV = __webpack_require__(597);
+
+	var _urlMappingV2 = _interopRequireDefault(_urlMappingV);
+
 	var _urlMapping = __webpack_require__(595);
 
 	var _urlMapping2 = _interopRequireDefault(_urlMapping);
@@ -83496,22 +83519,11 @@
 	        this.loadDebugTime();
 	        //this.setState({urlMapping: urlMapping});
 	    },
-	    /*componentWillReceiveProps: function(props) {
-	        this.setState({
-	            page: 1, 
-	            language: '', 
-	            timeLimit:'' , 
-	            httpResponse:'',
-	            httpSelect:'Not set',  
-	            noVm:'Not set', 
-	            campaignExpired: 'Not set', 
-	            vmNotYours: false, 
-	            imgCorrupts:'Not set', 
-	            videoCorrupts: false, 
-	            mapping: [],
-	            debugTimeLimit: ''
-	        });
-	    },*/
+	    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	        if (nextProps.version != this.props.version || nextProps.urlPrefix != this.props.urlPrefix || nextProps.cid != this.props.cid) {
+	            this.resetState(1);
+	        }
+	    },
 	    getInitialState: function getInitialState() {
 	        return {
 	            page: 1,
@@ -83550,7 +83562,7 @@
 	            case 1:
 	                return _react2.default.createElement(_SettingPageOne2.default, { state: this.state, updateState: this.updateState, onChangeChecked: this.onChangeChecked, httpSelectOptions: httpSelectOptions, campaignExpiredOptions: campaignExpiredOptions });
 	            case 2:
-	                return _react2.default.createElement(_SettingPageTwo2.default, { state: this.state, updateState: this.updateState, onChangeChecked: this.onChangeChecked, noVmOptions: noVmOptions, corruptedImageOptions: corruptedImageOptions });
+	                return _react2.default.createElement(_SettingPageTwo2.default, { version: this.props.version, state: this.state, updateState: this.updateState, onChangeChecked: this.onChangeChecked, noVmOptions: noVmOptions, corruptedImageOptions: corruptedImageOptions });
 	            case 3:
 	                return _react2.default.createElement(_SettingPageThree2.default, { cid: this.props.cid, urlPrefix: this.props.urlPrefix, debugTimeLimit: this.state.debugTimeLimit, handleReset: this.handleReset });
 	        }
@@ -83585,11 +83597,15 @@
 	        var stateObj = this.state;
 	        var cid = this.props.cid;
 	        console.log(stateObj);
+	        var mapping = _urlMapping2.default;
+	        if (this.props.version == "v3") {
+	            mapping = _urlMappingV2.default;
+	        }
 	        _.forEach(stateObj, function (value, key) {
-	            if (key in _urlMapping2.default && value && value != "Not set") {
+	            if (key in mapping && value && value != "Not set") {
 	                //only look at attributes that are set
 	                var url = '';
-	                var subObj = _urlMapping2.default[key]; //there are "type" and "url" in subObj
+	                var subObj = mapping[key]; //there are "type" and "url" in subObj
 	                url = subObj.url;
 	                if (subObj.type == "select" && typeof url[value] != 'undefined') {
 	                    url = url[value];
@@ -83661,7 +83677,7 @@
 	                _FlatButton2.default,
 	                { type: 'button', id: '3', onClick: function onClick() {
 	                        return _this.handleClick(3);
-	                    }, style: this.state.page == 3 ? style.buttonActive : null },
+	                    }, style: this.state.page == 3 ? style.buttonActive : null, disabled: this.props.version == "v3" },
 	                '3'
 	            )
 	        );
@@ -84717,7 +84733,7 @@
 	                        _react2.default.createElement(_Divider2.default, { style: style.shortLine }),
 	                        _react2.default.createElement(_FormRadioButtons2.default, { order: '1', label: 'Image Corrupts', id: 'imgCorrupts', state: this.props.state, options: this.props.corruptedImageOptions, updateState: this.props.updateState }),
 	                        _react2.default.createElement(_Divider2.default, { style: style.longLine }),
-	                        _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'Protocol Buffer Corrupts', id: 'bufferCorrupts', state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
+	                        _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'Protocol Buffer Corrupts', version: this.props.version, id: 'bufferCorrupts', state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
 	                        _react2.default.createElement(_Divider2.default, { style: style.longLine })
 	                    )
 	                );
@@ -84750,7 +84766,7 @@
 	                        _react2.default.createElement(_Divider2.default, { style: style.shortLine }),
 	                        _react2.default.createElement(_FormRadioButtons2.default, { order: '1', label: 'Image Corrupts', id: 'imgCorrupts', state: this.props.state, options: this.props.corruptedImageOptions, updateState: this.props.updateState }),
 	                        _react2.default.createElement(_Divider2.default, { style: style.longLine }),
-	                        _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'Protocol Buffer Corrupts', id: 'bufferCorrupts', state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
+	                        _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'Protocol Buffer Corrupts', id: 'bufferCorrupts', version: this.props.version, state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
 	                        _react2.default.createElement(_Divider2.default, { style: style.longLine }),
 	                        _react2.default.createElement(_FormToggle2.default, { order: '3', label: 'Video Corrupts', id: 'videoCorrupts', state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
 	                        _react2.default.createElement(_Divider2.default, { style: style.longLine })
@@ -84808,7 +84824,7 @@
 	        };
 	        var key = this.props.id;
 	        var updatedValue = this.props.state[key];
-	        return _react2.default.createElement(_Toggle2.default, { label: this.props.label, onToggle: this.handleChange, toggled: updatedValue, labelStyle: style.label });
+	        return _react2.default.createElement(_Toggle2.default, { label: this.props.label, onToggle: this.handleChange, toggled: updatedValue, disabled: key == "bufferCorrupts" && this.props.version == "v3", labelStyle: style.label });
 	    }
 	});
 
@@ -85766,6 +85782,63 @@
 	});
 
 	exports.default = UrlDialog;
+
+/***/ },
+/* 597 */
+/***/ function(module, exports) {
+
+	module.exports = {
+		"language": {
+			"type": "textInput",
+			"url": "/v3/campaigns/set-next-lang-to-:lang/:cid"
+		},
+		"timeLimit": {
+			"type": "textInput",
+			"url": "/v3/trial/set-next-timelimit-:n-secs/:cid"
+		},
+		"httpResponse": {
+			"type": "textInput",
+			"url": {
+				"Campaign phase": "/v3/campaigns/set-next-status-code-:code/:cid",
+				"Trial phase": "/v3/trial/set-next-status-code-:code/:cid",
+				"Onetime token": "/v3/onetime-token/set-next-status-code-:code/:cid"
+			}
+		},
+		"noVm": {
+			"type": "select",
+			"url": {
+				"Campaign phase": "/v3/campaigns/set-next-novm/:cid",
+				"Trial phase": "/v3/trial/set-next-novm/:cid",
+				"Web connection phase": "/v3/trial/set-next-novm-on-connect-ws/:cid"
+			}
+		},
+		"campaignExpired": {
+			"type": "select",
+			"url": {
+				"Campaign phase": "/v3/campaigns/set-next-expired/:cid",
+				"Trial phase": "/v3/trial/set-next-expired/:cid"
+			}
+		},
+		"vmNotYours": {
+			"type": "checkbox",
+			"url": "/v3/trial/set-next-not-yours/:cid"
+		},
+		"imgCorrupts": {
+			"type": "select",
+			"url": {
+				"Campaign phase": "/v3/campaigns/set-next-image-link-corrupt/:cid",
+				"Trial phase": "/v3/trial/set-next-image-link-corrupt/:cid"
+			}
+		},
+		"videoCorrupts": {
+			"type": "checkbox",
+			"url": "/v3/trial/set-next-video-frames-corrupted/:cid"
+		},
+		"bufferCorrupts": {
+			"type": "checkbox",
+			"url": "/v4/trial/set-next-protobuf-corrupted/:cid"
+		}
+	};
 
 /***/ }
 /******/ ]);
