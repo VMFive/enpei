@@ -84725,78 +84725,78 @@
 	        switch (this.props.state.imgCorrupts == "Campaign phase") {
 	            case true:
 	                return _react2.default.createElement(
-	                    'div',
-	                    { style: style.settingPage },
+	                    _Paper2.default,
+	                    { style: style.section },
 	                    _react2.default.createElement(
-	                        _Paper2.default,
-	                        { style: style.section },
-	                        _react2.default.createElement(
-	                            'h3',
-	                            { style: style.title },
-	                            'VM'
-	                        ),
-	                        _react2.default.createElement(_Divider2.default, { style: style.shortLine }),
-	                        _react2.default.createElement(_FormRadioButtons2.default, { order: '1', label: 'No VM', id: 'noVm', state: this.props.state, options: this.props.noVmOptions, updateState: this.props.updateState }),
-	                        _react2.default.createElement(_Divider2.default, { style: style.longLine }),
-	                        _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'VM Not Yours', id: 'vmNotYours', disabled: false, state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
-	                        _react2.default.createElement(_Divider2.default, { style: style.longLine })
+	                        'h3',
+	                        { style: style.title },
+	                        'Video and Images'
 	                    ),
-	                    _react2.default.createElement(
-	                        _Paper2.default,
-	                        { style: style.section },
-	                        _react2.default.createElement(
-	                            'h3',
-	                            { style: style.title },
-	                            'Video and Images'
-	                        ),
-	                        _react2.default.createElement(_Divider2.default, { style: style.shortLine }),
-	                        _react2.default.createElement(_FormRadioButtons2.default, { order: '1', label: 'Image Corrupts', id: 'imgCorrupts', state: this.props.state, options: this.props.corruptedImageOptions, updateState: this.props.updateState }),
-	                        _react2.default.createElement(_Divider2.default, { style: style.longLine }),
-	                        _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'Protocol Buffer Corrupts', id: 'bufferCorrupts', disabled: this.props.version == "v3", state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
-	                        _react2.default.createElement(_Divider2.default, { style: style.longLine })
-	                    )
+	                    _react2.default.createElement(_Divider2.default, { style: style.shortLine }),
+	                    _react2.default.createElement(_FormRadioButtons2.default, { order: '1', label: 'Image Corrupts', id: 'imgCorrupts', state: this.props.state, options: this.props.corruptedImageOptions, updateState: this.props.updateState }),
+	                    _react2.default.createElement(_Divider2.default, { style: style.longLine })
 	                );
 	            case false:
 	                return _react2.default.createElement(
-	                    'div',
-	                    { style: style.settingPage },
+	                    _Paper2.default,
+	                    { style: style.section },
 	                    _react2.default.createElement(
-	                        _Paper2.default,
-	                        { style: style.section },
-	                        _react2.default.createElement(
-	                            'h3',
-	                            { style: style.title },
-	                            'VM'
-	                        ),
-	                        _react2.default.createElement(_Divider2.default, { style: style.shortLine }),
-	                        _react2.default.createElement(_FormRadioButtons2.default, { order: '1', label: 'No VM', id: 'noVm', state: this.props.state, options: this.props.noVmOptions, updateState: this.props.updateState }),
-	                        _react2.default.createElement(_Divider2.default, { style: style.longLine }),
-	                        _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'VM Not Yours', id: 'vmNotYours', disabled: false, state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
-	                        _react2.default.createElement(_Divider2.default, { style: style.longLine })
+	                        'h3',
+	                        { style: style.title },
+	                        'Video and Images'
 	                    ),
-	                    _react2.default.createElement(
-	                        _Paper2.default,
-	                        { style: style.section },
-	                        _react2.default.createElement(
-	                            'h3',
-	                            { style: style.title },
-	                            'Video and Images'
-	                        ),
-	                        _react2.default.createElement(_Divider2.default, { style: style.shortLine }),
-	                        _react2.default.createElement(_FormRadioButtons2.default, { order: '1', label: 'Image Corrupts', id: 'imgCorrupts', state: this.props.state, options: this.props.corruptedImageOptions, updateState: this.props.updateState }),
-	                        _react2.default.createElement(_Divider2.default, { style: style.longLine }),
-	                        _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'Protocol Buffer Corrupts', id: 'bufferCorrupts', disabled: this.props.version == "v3", state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
-	                        _react2.default.createElement(_Divider2.default, { style: style.longLine }),
-	                        _react2.default.createElement(_FormToggle2.default, { order: '3', label: 'Video Corrupts', id: 'videoCorrupts', disabled: false, state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
-	                        _react2.default.createElement(_Divider2.default, { style: style.longLine })
-	                    )
+	                    _react2.default.createElement(_Divider2.default, { style: style.shortLine }),
+	                    _react2.default.createElement(_FormRadioButtons2.default, { order: '1', label: 'Image Corrupts', id: 'imgCorrupts', state: this.props.state, options: this.props.corruptedImageOptions, updateState: this.props.updateState }),
+	                    _react2.default.createElement(_Divider2.default, { style: style.longLine }),
+	                    _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'Protocol Buffer Corrupts', id: 'bufferCorrupts', disabled: this.props.version == "v3", state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
+	                    _react2.default.createElement(_Divider2.default, { style: style.longLine }),
+	                    _react2.default.createElement(_FormToggle2.default, { order: '3', label: 'Video Corrupts', id: 'videoCorrupts', disabled: false, state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
+	                    _react2.default.createElement(_Divider2.default, { style: style.longLine })
 	                );
 	        }
 	    },
 	    render: function render() {
+	        var style = {
+	            longLine: {
+	                display: 'block',
+	                margin: '10px 0px 10px 0px'
+	            },
+	            shortLine: {
+	                display: 'block',
+	                margin: '10px 0px 10px 0px',
+	                width: '50%'
+	            },
+	            settingPage: {
+	                height: '553px'
+	            },
+	            section: {
+	                marginTop: '12px',
+	                padding: '16px'
+	            },
+	            title: {
+	                fontFamily: 'Roboto, sans-serif',
+	                fontWeight: '400',
+	                fontSize: '28px',
+	                marginTop: '10px'
+	            }
+	        };
 	        return _react2.default.createElement(
 	            'div',
-	            null,
+	            { style: style.settingPage },
+	            _react2.default.createElement(
+	                _Paper2.default,
+	                { style: style.section },
+	                _react2.default.createElement(
+	                    'h3',
+	                    { style: style.title },
+	                    'VM'
+	                ),
+	                _react2.default.createElement(_Divider2.default, { style: style.shortLine }),
+	                _react2.default.createElement(_FormRadioButtons2.default, { order: '1', label: 'No VM', id: 'noVm', state: this.props.state, options: this.props.noVmOptions, updateState: this.props.updateState }),
+	                _react2.default.createElement(_Divider2.default, { style: style.longLine }),
+	                _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'VM Not Yours', id: 'vmNotYours', disabled: false, state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
+	                _react2.default.createElement(_Divider2.default, { style: style.longLine })
+	            ),
 	            this.displayForm()
 	        );
 	    }
