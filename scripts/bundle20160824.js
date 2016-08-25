@@ -83696,7 +83696,7 @@
 	                _FlatButton2.default,
 	                { type: 'button', id: '3', onClick: function onClick() {
 	                        return _this.handleClick(3);
-	                    }, style: this.state.page == 3 ? style.buttonActive : null },
+	                    }, style: this.state.page == 3 ? style.buttonActive : null, version: this.props.version },
 	                '3'
 	            )
 	        );
@@ -84752,7 +84752,7 @@
 	                        _react2.default.createElement(_Divider2.default, { style: style.shortLine }),
 	                        _react2.default.createElement(_FormRadioButtons2.default, { order: '1', label: 'Image Corrupts', id: 'imgCorrupts', state: this.props.state, options: this.props.corruptedImageOptions, updateState: this.props.updateState }),
 	                        _react2.default.createElement(_Divider2.default, { style: style.longLine }),
-	                        _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'Protocol Buffer Corrupts', version: this.props.version, id: 'bufferCorrupts', state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
+	                        _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'Protocol Buffer Corrupts', id: 'bufferCorrupts', disabled: this.props.version == "v3", state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
 	                        _react2.default.createElement(_Divider2.default, { style: style.longLine })
 	                    )
 	                );
@@ -84785,7 +84785,7 @@
 	                        _react2.default.createElement(_Divider2.default, { style: style.shortLine }),
 	                        _react2.default.createElement(_FormRadioButtons2.default, { order: '1', label: 'Image Corrupts', id: 'imgCorrupts', state: this.props.state, options: this.props.corruptedImageOptions, updateState: this.props.updateState }),
 	                        _react2.default.createElement(_Divider2.default, { style: style.longLine }),
-	                        _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'Protocol Buffer Corrupts', id: 'bufferCorrupts', version: this.props.version, state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
+	                        _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'Protocol Buffer Corrupts', id: 'bufferCorrupts', disabled: this.props.version == "v3", state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
 	                        _react2.default.createElement(_Divider2.default, { style: style.longLine }),
 	                        _react2.default.createElement(_FormToggle2.default, { order: '3', label: 'Video Corrupts', id: 'videoCorrupts', state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
 	                        _react2.default.createElement(_Divider2.default, { style: style.longLine })
@@ -84843,7 +84843,8 @@
 	        };
 	        var key = this.props.id;
 	        var updatedValue = this.props.state[key];
-	        return _react2.default.createElement(_Toggle2.default, { label: this.props.label, onToggle: this.handleChange, toggled: updatedValue, disabled: key == "bufferCorrupts" && this.props.version == "v3", labelStyle: style.label });
+	        console.log(this.props.disabled);
+	        return _react2.default.createElement(_Toggle2.default, { label: this.props.label, onToggle: this.handleChange, toggled: updatedValue, disabled: this.props.disabled, labelStyle: style.label });
 	    }
 	});
 
