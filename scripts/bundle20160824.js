@@ -84738,7 +84738,7 @@
 	                        _react2.default.createElement(_Divider2.default, { style: style.shortLine }),
 	                        _react2.default.createElement(_FormRadioButtons2.default, { order: '1', label: 'No VM', id: 'noVm', state: this.props.state, options: this.props.noVmOptions, updateState: this.props.updateState }),
 	                        _react2.default.createElement(_Divider2.default, { style: style.longLine }),
-	                        _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'VM Not Yours', id: 'vmNotYours', state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
+	                        _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'VM Not Yours', id: 'vmNotYours', disabled: false, state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
 	                        _react2.default.createElement(_Divider2.default, { style: style.longLine })
 	                    ),
 	                    _react2.default.createElement(
@@ -84771,7 +84771,7 @@
 	                        _react2.default.createElement(_Divider2.default, { style: style.shortLine }),
 	                        _react2.default.createElement(_FormRadioButtons2.default, { order: '1', label: 'No VM', id: 'noVm', state: this.props.state, options: this.props.noVmOptions, updateState: this.props.updateState }),
 	                        _react2.default.createElement(_Divider2.default, { style: style.longLine }),
-	                        _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'VM Not Yours', id: 'vmNotYours', state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
+	                        _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'VM Not Yours', id: 'vmNotYours', disabled: false, state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
 	                        _react2.default.createElement(_Divider2.default, { style: style.longLine })
 	                    ),
 	                    _react2.default.createElement(
@@ -84787,7 +84787,7 @@
 	                        _react2.default.createElement(_Divider2.default, { style: style.longLine }),
 	                        _react2.default.createElement(_FormToggle2.default, { order: '2', label: 'Protocol Buffer Corrupts', id: 'bufferCorrupts', disabled: this.props.version == "v3", state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
 	                        _react2.default.createElement(_Divider2.default, { style: style.longLine }),
-	                        _react2.default.createElement(_FormToggle2.default, { order: '3', label: 'Video Corrupts', id: 'videoCorrupts', state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
+	                        _react2.default.createElement(_FormToggle2.default, { order: '3', label: 'Video Corrupts', id: 'videoCorrupts', disabled: false, state: this.props.state, onChangeChecked: this.props.onChangeChecked }),
 	                        _react2.default.createElement(_Divider2.default, { style: style.longLine })
 	                    )
 	                );
@@ -84843,7 +84843,6 @@
 	        };
 	        var key = this.props.id;
 	        var updatedValue = this.props.state[key];
-	        console.log(this.props.disabled);
 	        return _react2.default.createElement(_Toggle2.default, { label: this.props.label, onToggle: this.handleChange, toggled: updatedValue, disabled: this.props.disabled, labelStyle: style.label });
 	    }
 	});
