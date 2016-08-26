@@ -40521,12 +40521,14 @@
 	    },
 	    getInitialState: function getInitialState() {
 	        return {
-	            name: ''
+	            name: '',
+	            error: false
 	        };
 	    },
 	    resetState: function resetState() {
 	        this.setState({
-	            name: ''
+	            name: '',
+	            error: false
 	        });
 	        this.props.updateRootState("openEditName", false);
 	    },
@@ -40536,8 +40538,12 @@
 	    handleSubmitName: function handleSubmitName(e) {
 	        e.preventDefault();
 	        e.stopPropagation();
-	        this.props.updateRootCidName(this.props.cid, this.state.name);
-	        this.resetState();
+	        if (this.state.name == '') {
+	            this.setState({ error: true });
+	        } else {
+	            this.props.updateRootCidName(this.props.cid, this.state.name);
+	            this.resetState();
+	        }
 	    },
 	    handleChangeName: function handleChangeName(e) {
 	        this.setState({ name: e.target.value });
@@ -40553,7 +40559,7 @@
 	                        if (input != null) {
 	                            input.focus();
 	                        }
-	                    }, hintText: 'Enter a new name', floatingLabelText: 'Name', value: this.state.name, onChange: this.handleChangeName }),
+	                    }, hintText: 'Enter a new name', floatingLabelText: 'Name', errorText: this.state.error ? "Please enter name" : null, value: this.state.name, onChange: this.handleChangeName }),
 	                _react2.default.createElement(_FlatButton2.default, { type: 'submit', label: 'Submit', primary: true, onClick: this.handleSubmitName }),
 	                _react2.default.createElement(_FlatButton2.default, { label: 'Cancel', primary: true, onTouchTap: this.handleCloseEdit })
 	            )
@@ -68879,7 +68885,7 @@
 	        var details = result.ua.ua;
 	        var sessionId = result["@data"]["@couple_tokens"].adplay_session_id;
 	        var sdkVersion = result["@data"]["common"].sdkvs;
-	        var uiVersion = result["@data"]["common"].ui_version;
+	        var uiVersion = result["@data"]["common"].sdkvs;
 	        var adId = result["@data"]["common"].ad_id;
 	        var logs = [result];
 	        var time = moment().valueOf();
@@ -68913,11 +68919,11 @@
 	            } else {
 	                var sessionId = result["@data"]["@couple_tokens"].adplay_session_id;
 	                var sdkVersion = result["@data"]["common"].sdkvs;
-	                var uiVersion = result["@data"]["common"].ui_version;
+	                var uiVersion = result["@data"]["common"].sdkvs;
 	                var adId = result["@data"]["common"].ad_id;
 	                if (sessionId != this.props.state.cids[index].sessionId) {
 	                    this.props.updateRootCidDetails(index, "sessionId", sessionId);
-	                    this.props.updateRootCidDetails(index, "uiVersion", "No information");
+	                    this.props.updateRootCidDetails(index, "uiVersion", uiVersion);
 	                    this.props.updateRootCidDetails(index, "sdkVersion", sdkVersion);
 	                    this.props.updateRootCidDetails(index, "adId", adId);
 	                    //this.props.updateRootCidDetails(index, "logs", [result]);
@@ -68932,7 +68938,7 @@
 	                    var time = moment().valueOf();
 	                    this.updateCidLogPair(cid, logs);
 	                    //this.setState({timer: time});
-	                    if (result["@data"]["@event_name"] == "intro") {
+	                    if (result["@data"]["@event_name"] == "intro" || this.props.state.cids[index].uiVersion != result["@data"]["common"].sdkvs) {
 	                        this.props.updateRootCidDetails(index, "uiVersion", sdkVersion);
 	                    }
 	                }
